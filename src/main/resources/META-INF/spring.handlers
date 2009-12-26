@@ -1,1 +1,1 @@
-http\://www.mulesoft.org/schema/mule/erlang/3.0=org.mule.transport.erlang.config.ErlangNamespaceHandler
+http\://www.mulesoft.org/schema/mule/erlang=org.mule.transport.erlang.config.ErlangNamespaceHandler

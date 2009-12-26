@@ -11,41 +11,48 @@
 package org.mule.transport.erlang;
 
 import org.mule.api.MuleException;
-import org.mule.api.MessageTypeNotSupportedException;
 import org.mule.transport.AbstractMessageAdapter;
 
 /**
  * <code>ErlangMessageAdapter</code> TODO document
  */
-public class ErlangMessageAdapter extends AbstractMessageAdapter
-{
- 
-    /* For general guidelines on writing transports see
-       http://mule.mulesource.org/display/MULE/Writing+Transports */
+public class ErlangMessageAdapter extends AbstractMessageAdapter {
 
-    /* IMPLEMENTATION NOTE: The MessageAdapter is used to wrap an underlying
-       message. It should store a copy of the underlying message as an
-       instance variable. */
+    /*
+     * For general guidelines on writing transports see
+     * http://mule.mulesource.org/display/MULE/Writing+Transports
+     */
 
-    /* IMPLEMENTATION NOTE: If the underlying transport data is available as a stream
-        it is recommended that you pass the stream object into the MessageAdapter as the payload.
-        This will ensure that Mule will use streaming where possible. */
-    
-    public ErlangMessageAdapter(Object message) throws MuleException
-    {
-        /* IMPLEMENTATION NOTE: The constructor should determine that the
-           message is of the correct type or throw an exception i.e.
-        
-        if (message instanceof byte[]) {
-            this.message = (byte[]) message;
-        } else {
-            throw new MessageTypeNotSupportedException(message, getClass());
-        }
-        */
+    /*
+     * IMPLEMENTATION NOTE: The MessageAdapter is used to wrap an underlying
+     * message. It should store a copy of the underlying message as an instance
+     * variable.
+     */
+
+    /*
+     * IMPLEMENTATION NOTE: If the underlying transport data is available as a
+     * stream it is recommended that you pass the stream object into the
+     * MessageAdapter as the payload. This will ensure that Mule will use
+     * streaming where possible.
+     */
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4088199136738488029L;
+
+    public ErlangMessageAdapter(final Object message) throws MuleException {
+        /*
+         * IMPLEMENTATION NOTE: The constructor should determine that the
+         * message is of the correct type or throw an exception i.e.
+         * 
+         * if (message instanceof byte[]) { this.message = (byte[]) message; }
+         * else { throw new MessageTypeNotSupportedException(message,
+         * getClass()); }
+         */
     }
 
-    public Object getPayload()
-    {
+    public Object getPayload() {
         // TODO return the actual wrapped message
         throw new UnsupportedOperationException("getPayload");
     }

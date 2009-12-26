@@ -11,26 +11,19 @@ package org.mule.transport.erlang;
 
 import org.mule.tck.FunctionalTestCase;
 
-/**
- * TODO
- */
-public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase
-{
-    protected String getConfigResources()
-    {
-        //TODO You'll need to edit this file to configure the properties specific to your transport
+public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
+    @Override
+    protected String getConfigResources() {
         return "erlang-namespace-config.xml";
     }
 
-    public void testErlangConfig() throws Exception
-    {
-        ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector");
+    public void testErlangConfig() throws Exception {
+        final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector");
         assertNotNull(c);
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
 
-        //TODO Assert specific properties are configured correctly
-
+        // TODO Assert specific properties are configured correctly
 
     }
 }
