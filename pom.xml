@@ -236,6 +236,7 @@
       <groupId>com.ericsson</groupId>
       <artifactId>jinterface</artifactId>
       <version>${jinterface.version}</version>
+      <classifier>jdk-${jdk.version}</classifier>
     </dependency>
     
     <!-- for testing -->
