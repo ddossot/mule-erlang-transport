@@ -84,15 +84,18 @@ public abstract class ErlangConversionUtils {
     public static Object erlangToJava(final OtpErlangObject erl) throws IllegalArgumentException {
         Validate.notNull(erl, "Can't transform null objects");
 
-        if (erl instanceof OtpErlangString) {
-            return ((OtpErlangString) erl).stringValue();
-        }
-        if (erl instanceof OtpErlangChar) {
-            try {
-                return ((OtpErlangChar) erl).charValue();
-            } catch (final OtpErlangRangeException oere) {
-                throw new IllegalArgumentException("Can't convert Erlang character", oere);
+        try {
+            if (erl instanceof OtpErlangString) {
+                return ((OtpErlangString) erl).stringValue();
             }
+            if (erl instanceof OtpErlangChar) {
+                return ((OtpErlangChar) erl).charValue();
+            }
+            if (erl instanceof OtpErlangByte) {
+                return ((OtpErlangByte) erl).byteValue();
+            }
+        } catch (final OtpErlangRangeException oere) {
+            throw new IllegalArgumentException("Can't convert Erlang character", oere);
         }
 
         // FIXME implement all types
