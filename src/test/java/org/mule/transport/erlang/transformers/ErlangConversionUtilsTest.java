@@ -12,6 +12,7 @@ public class ErlangConversionUtilsTest {
     @Test
     public void roundTrips() {
         assertEquals("string", "string", ErlangConversionUtils.erlangToJava(ErlangConversionUtils.javaToErlang("string")));
+        assertEquals("char", 'a', ErlangConversionUtils.erlangToJava(ErlangConversionUtils.javaToErlang('a')));
     }
 
 }

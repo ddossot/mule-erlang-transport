@@ -14,6 +14,7 @@ import com.ericsson.otp.erlang.OtpErlangInt;
 import com.ericsson.otp.erlang.OtpErlangList;
 import com.ericsson.otp.erlang.OtpErlangLong;
 import com.ericsson.otp.erlang.OtpErlangObject;
+import com.ericsson.otp.erlang.OtpErlangRangeException;
 import com.ericsson.otp.erlang.OtpErlangShort;
 import com.ericsson.otp.erlang.OtpErlangString;
 
@@ -85,6 +86,13 @@ public abstract class ErlangConversionUtils {
 
         if (erl instanceof OtpErlangString) {
             return ((OtpErlangString) erl).stringValue();
+        }
+        if (erl instanceof OtpErlangChar) {
+            try {
+                return ((OtpErlangChar) erl).charValue();
+            } catch (final OtpErlangRangeException oere) {
+                throw new IllegalArgumentException("Can't convert Erlang character", oere);
+            }
         }
 
         // FIXME implement all types
