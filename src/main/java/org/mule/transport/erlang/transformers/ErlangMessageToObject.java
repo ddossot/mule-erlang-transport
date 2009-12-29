@@ -10,46 +10,30 @@
 
 package org.mule.transport.erlang.transformers;
 
-import org.mule.transformer.AbstractMessageAwareTransformer;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
+import org.mule.transformer.AbstractMessageAwareTransformer;
+
+import com.ericsson.otp.erlang.OtpErlangObject;
 
 /**
- * <code>ErlangMessageToObject</code> TODO Document
+ * <code>ErlangMessageToObject</code> converts an OtpErlangObject to a Java
+ * Object.
  */
-public class ErlangMessageToObject extends AbstractMessageAwareTransformer
-{
+public class ErlangMessageToObject extends AbstractMessageAwareTransformer {
 
-    /* For general guidelines on writing transports see
-       http://mule.mulesource.org/display/MULE/Writing+Transports */
-
-    public ErlangMessageToObject()
-    {
-        /* IMPLEMENTATION NOTE: Here you can set default types that the
-           transformer will accept at runtime.  Mule will then validate the
-           transformer at runtime. You can register one or more source
-           types. eg.
-
-            registerSourceType(XXX.class.getName());
-        */
-
-        /* IMPLEMENTATION NOTE: It's good practice to set the expected return
-           type for this transformer here This helps Mule validate event flows
-           and Transformer chains
-
-            setReturnClass(YYY.class);
-        */
-
+    public ErlangMessageToObject() {
+        registerSourceType(OtpErlangObject.class);
+        setReturnClass(Object.class);
     }
 
-    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
-    {
-        // TODO Transform the payload of message here. See comments in {@link AbstractMessageAwareTransformer}
-
-        // Make sure you return a transfromed object that matches the
-        // returnClass type
-
-        throw new UnsupportedOperationException("transform");
+    @Override
+    public Object transform(final MuleMessage message, final String outputEncoding) throws TransformerException {
+        try {
+            return ErlangConversionUtils.erlangToJava((OtpErlangObject) message.getPayload());
+        } catch (final IllegalArgumentException iae) {
+            throw new TransformerException(this, iae);
+        }
     }
 
 }

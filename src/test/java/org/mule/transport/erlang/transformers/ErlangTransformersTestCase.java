@@ -10,50 +10,36 @@
 
 package org.mule.transport.erlang.transformers;
 
-import org.junit.Ignore;
 import org.mule.api.transformer.Transformer;
 import org.mule.transformer.AbstractTransformerTestCase;
 
-// FIXME reactivate test
-@Ignore
+import com.ericsson.otp.erlang.OtpErlangString;
+
 public class ErlangTransformersTestCase extends AbstractTransformerTestCase {
 
-    /*
-     * For general guidelines on writing transports see
-     * http://mule.mulesource.org/display/MULE/Writing+Transports
-     */
+    private final static String TEST_DATA = "foo";
 
     @Override
     public Object getTestData() {
-        // TODO create a test data object that will be passed into the
-        // transformer
-        throw new UnsupportedOperationException("getResultData");
+        return TEST_DATA;
     }
 
     @Override
     public Object getResultData() {
-        try {
-            // TODO Return the result data expected once the getTestData()
-            // value has been transformed
-            throw new UnsupportedOperationException("getResultData");
-        } catch (final Exception ex) {
-            return null;
-        }
+        return new OtpErlangString(TEST_DATA);
     }
 
     @Override
     public Transformer getTransformer() {
-        final Transformer t = new ErlangMessageToObject();
-        // Set the correct return class for this roundtrip test
-        t.setReturnClass(this.getResultData().getClass());
+        final ObjectToErlangMessage t = new ObjectToErlangMessage();
+        t.setMuleContext(muleContext);
         return t;
     }
 
     @Override
     public Transformer getRoundTripTransformer() {
-        final Transformer t = new ObjectToErlangMessage();
-        // Set the correct return class for this roundtrip test
-        t.setReturnClass(this.getTestData().getClass());
+        final ErlangMessageToObject t = new ErlangMessageToObject();
+        t.setMuleContext(muleContext);
         return t;
     }
 
