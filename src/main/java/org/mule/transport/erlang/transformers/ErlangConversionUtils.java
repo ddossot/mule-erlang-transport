@@ -1,11 +1,14 @@
 package org.mule.transport.erlang.transformers;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.Validate;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangBoolean;
 import com.ericsson.otp.erlang.OtpErlangByte;
 import com.ericsson.otp.erlang.OtpErlangChar;
 import com.ericsson.otp.erlang.OtpErlangDouble;
@@ -19,9 +22,13 @@ import com.ericsson.otp.erlang.OtpErlangShort;
 import com.ericsson.otp.erlang.OtpErlangString;
 
 /**
+ * Supporting methods for Java to Erlang conversion.
+ * 
  * @author <a href="mailto:david@dossot.net">David Dossot</a>
  */
 public abstract class ErlangConversionUtils {
+
+    // TODO add support for Array <-> Tuple and Map <-> PropList conversions
 
     private ErlangConversionUtils() {
         throw new UnsupportedOperationException("do not instantiate");
@@ -67,7 +74,7 @@ public abstract class ErlangConversionUtils {
             return new OtpErlangDouble((Double) obj);
         }
         if (obj instanceof Boolean) {
-            return new OtpErlangAtom((Boolean) obj ? "true" : "false");
+            return new OtpErlangBoolean((Boolean) obj);
         }
         if (obj instanceof Collection<?>) {
             final Object[] v = ((Collection<?>) obj).toArray(new Object[] {});
@@ -93,6 +100,38 @@ public abstract class ErlangConversionUtils {
             }
             if (erl instanceof OtpErlangByte) {
                 return ((OtpErlangByte) erl).byteValue();
+            }
+            if (erl instanceof OtpErlangShort) {
+                return ((OtpErlangShort) erl).shortValue();
+            }
+            if (erl instanceof OtpErlangInt) {
+                return ((OtpErlangInt) erl).intValue();
+            }
+            if (erl instanceof OtpErlangLong) {
+                final OtpErlangLong otpErlangLong = (OtpErlangLong) erl;
+                if (otpErlangLong.isLong()) {
+                    return otpErlangLong.longValue();
+                }
+                return otpErlangLong.bigIntegerValue();
+            }
+            if (erl instanceof OtpErlangFloat) {
+                return ((OtpErlangFloat) erl).floatValue();
+            }
+            if (erl instanceof OtpErlangDouble) {
+                return ((OtpErlangDouble) erl).doubleValue();
+            }
+            if (erl instanceof OtpErlangBoolean) {
+                return ((OtpErlangBoolean) erl).booleanValue();
+            }
+            if (erl instanceof OtpErlangAtom) {
+                return ((OtpErlangAtom) erl).toString();
+            }
+            if (erl instanceof OtpErlangList) {
+                final List<Object> result = new ArrayList<Object>();
+                for (final OtpErlangObject oeo : ((OtpErlangList) erl).elements()) {
+                    result.add(erlangToJava(oeo));
+                }
+                return result;
             }
         } catch (final OtpErlangRangeException oere) {
             throw new IllegalArgumentException("Can't convert Erlang character", oere);
