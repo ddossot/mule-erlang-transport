@@ -10,6 +10,8 @@
 package org.mule.transport.erlang;
 
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.erlang.transformers.ErlangMessageToObject;
+import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
 public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
     @Override
@@ -17,7 +19,7 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
         return "erlang-namespace-config.xml";
     }
 
-    public void testErlangConfig() throws Exception {
+    public void testConnectorConfiguration() throws Exception {
         final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector");
         assertNotNull(c);
         assertTrue(c.isConnected());
@@ -25,5 +27,13 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
 
         // TODO Assert specific properties are configured correctly
 
+    }
+
+    public void testTransformersConfiguration() throws Exception {
+        assertTrue("ErlangMessageToObject configured",
+                muleContext.getRegistry().lookupTransformer("e2oTransformer") instanceof ErlangMessageToObject);
+
+        assertTrue("ObjectToErlangMessage configured",
+                muleContext.getRegistry().lookupTransformer("o2eTransformer") instanceof ObjectToErlangMessage);
     }
 }

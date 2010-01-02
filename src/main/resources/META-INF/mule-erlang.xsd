@@ -121,4 +121,10 @@
     -->
     </xsd:attributeGroup>
 
+
+  <!-- Transformers -->
+  <xsd:element name="erlang-message-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer" />
+
+  <xsd:element name="object-erlang-message-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer" />
+
 </xsd:schema>
