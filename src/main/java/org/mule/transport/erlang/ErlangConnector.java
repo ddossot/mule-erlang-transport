@@ -18,7 +18,7 @@ import org.mule.transport.AbstractConnector;
  * <code>ErlangConnector</code> TODO document
  */
 public class ErlangConnector extends AbstractConnector {
-    // FIXME support pingOnStartup option
+    // FIXME support cookie, nodeName, port parameters
 
     /* This constant defines the main transport protocol identifier */
     public static final String MULETRANSPORTNULL = "erlang";
