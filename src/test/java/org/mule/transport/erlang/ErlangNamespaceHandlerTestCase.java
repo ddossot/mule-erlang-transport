@@ -20,12 +20,13 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
     }
 
     public void testConnectorConfiguration() throws Exception {
-        final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector");
+        final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector1");
         assertNotNull(c);
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
 
-        // TODO Assert specific properties are configured correctly
+        // FIXME assert specific properties are configured correctly on
+        // connectors 1, 2 and 3
 
     }
 

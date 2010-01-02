@@ -18,21 +18,12 @@ import org.mule.transport.AbstractConnector;
  * <code>ErlangConnector</code> TODO document
  */
 public class ErlangConnector extends AbstractConnector {
-    // FIXME support cookie, nodeName, port parameters
-
     /* This constant defines the main transport protocol identifier */
-    public static final String MULETRANSPORTNULL = "erlang";
+    public static final String MULETRANSPORTERLANG = "erlang";
 
-    /*
-     * For general guidelines on writing transports see
-     * http://mule.mulesource.org/display/MULE/Writing+Transports
-     */
-
-    /*
-     * IMPLEMENTATION NOTE: All configuaration for the transport should be set
-     * on the Connector object, this is the object that gets configured in
-     * MuleXml
-     */
+    private String cookie;
+    private String nodeName;
+    private Integer port;
 
     @Override
     public void doInitialise() throws InitialisationException {
@@ -100,7 +91,31 @@ public class ErlangConnector extends AbstractConnector {
     }
 
     public String getProtocol() {
-        return MULETRANSPORTNULL;
+        return MULETRANSPORTERLANG;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(final String cookie) {
+        this.cookie = cookie;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(final String nodeName) {
+        this.nodeName = nodeName;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(final Integer port) {
+        this.port = port;
     }
 
 }

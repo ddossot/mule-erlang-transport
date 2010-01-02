@@ -9,9 +9,8 @@
     <erlang:erlang-message-to-object-transformer name="e2oTransformer" />
     <erlang:object-erlang-message-transformer name="o2eTransformer" />
 
-    <erlang:connector name="erlangConnector">
-        <!-- TODO Add connector specific properties here and then assert that 
-             they have been set in org.mule.transport.erlang.ErlangNamespaceHandlerTestCase -->
-    </erlang:connector>
+    <erlang:connector name="erlangConnector1" nodeName="muleErlang1" />
+    <erlang:connector name="erlangConnector2" nodeName="muleErlang2" cookie="xyz2" />
+    <erlang:connector name="erlangConnector3" nodeName="muleErlang3" cookie="xyz3" port="5432" />
 
 </mule>

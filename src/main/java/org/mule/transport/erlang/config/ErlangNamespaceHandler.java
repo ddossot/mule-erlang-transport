@@ -30,7 +30,7 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
          * URIBuilder as constants for common required attributes, but you can
          * also pass in a user-defined String[].
          */
-        registerStandardTransportEndpoints(ErlangConnector.MULETRANSPORTNULL, URIBuilder.PATH_ATTRIBUTES);
+        registerStandardTransportEndpoints(ErlangConnector.MULETRANSPORTERLANG, URIBuilder.PATH_ATTRIBUTES);
 
         /*
          * This will create the handler for your custom 'connector' element. You
