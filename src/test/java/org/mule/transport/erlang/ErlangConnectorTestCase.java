@@ -10,47 +10,35 @@
 
 package org.mule.transport.erlang;
 
-import org.junit.Ignore;
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractConnectorTestCase;
+import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
-//FIXME reactivate test
-@Ignore
 public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
-
-    /*
-     * For general guidelines on writing transports see
-     * http://mule.mulesource.org/display/MULE/Writing+Transports
-     */
 
     @Override
     public Connector createConnector() throws Exception {
-        /*
-         * IMPLEMENTATION NOTE: Create and initialise an instance of your
-         * connector here. Do not actually call the connect method.
-         */
-
         final ErlangConnector c = new ErlangConnector();
         c.setName("Test");
-        // TODO Set any additional properties on the connector here
+        c.setNodeName("TestErlangNode");
+        c.setCookie("TestCookie");
         return c;
     }
 
     @Override
     public String getTestEndpointURI() {
-        // TODO Return a valid endpoint for you transport here
-        throw new UnsupportedOperationException("getTestEndpointURI");
+        return "erlang://hostName:5432/nodeName/processName";
     }
 
     @Override
     public Object getValidMessage() throws Exception {
-        // TODO Return an valid message for your transport
-        throw new UnsupportedOperationException("getValidMessage");
+        return ErlangConversionUtils.javaToErlang("test");
     }
 
     public void testProperties() throws Exception {
-        // TODO test setting and retrieving any custom properties on the
-        // Connector as necessary
+        final ErlangConnector erlangConnector = (ErlangConnector) getConnector();
+        assertEquals("TestErlangNode", erlangConnector.getNodeName());
+        assertEquals("TestCookie", erlangConnector.getCookie());
     }
 
 }
