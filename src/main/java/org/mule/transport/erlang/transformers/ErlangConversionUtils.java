@@ -28,7 +28,8 @@ import com.ericsson.otp.erlang.OtpErlangString;
  */
 public abstract class ErlangConversionUtils {
 
-    // TODO add support for Array <-> Tuple and Map <-> PropList conversions
+    // TODO add support for Array <-> Tuple, Map <-> PropList, stream/byte[] <->
+    // Binary conversions
 
     private ErlangConversionUtils() {
         throw new UnsupportedOperationException("do not instantiate");
@@ -136,8 +137,6 @@ public abstract class ErlangConversionUtils {
         } catch (final OtpErlangRangeException oere) {
             throw new IllegalArgumentException("Can't convert Erlang character", oere);
         }
-
-        // FIXME implement all types
 
         throw new IllegalArgumentException("Unsupported object of type: " + erl.getClass().getName());
     }

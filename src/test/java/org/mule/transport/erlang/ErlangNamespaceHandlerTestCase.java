@@ -19,15 +19,30 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
         return "erlang-namespace-config.xml";
     }
 
-    public void testConnectorConfiguration() throws Exception {
-        final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector("erlangConnector1");
+    public void testMinimalConnectorConfiguration() throws Exception {
+        testConnectorConfiguration("erlangConnector1", "muleErlang1", null, Integer.valueOf(0));
+    }
+
+    public void testIntermediateConnectorConfiguration() throws Exception {
+        testConnectorConfiguration("erlangConnector2", "muleErlang2", "xyz2", Integer.valueOf(0));
+    }
+
+    public void testFullConnectorConfiguration() throws Exception {
+        testConnectorConfiguration("erlangConnector3", "muleErlang3", "xyz3", Integer.valueOf(5432));
+    }
+
+    private void testConnectorConfiguration(final String connectorName, final String nodeName, final String cookie,
+            final Integer port) throws Exception {
+
+        final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector(connectorName);
         assertNotNull(c);
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
 
-        // FIXME assert specific properties are configured correctly on
-        // connectors 1, 2 and 3
-
+        assertEquals(connectorName, c.getName());
+        assertEquals(nodeName, c.getNodeName());
+        assertEquals(cookie, c.getCookie());
+        assertEquals(port, c.getPort());
     }
 
     public void testTransformersConfiguration() throws Exception {
