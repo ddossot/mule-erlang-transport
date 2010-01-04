@@ -11,6 +11,6 @@
 
     <erlang:connector name="erlangConnector1" nodeName="muleErlang1" />
     <erlang:connector name="erlangConnector2" nodeName="muleErlang2" cookie="xyz2" />
-    <erlang:connector name="erlangConnector3" nodeName="muleErlang3" cookie="xyz3" port="5432" />
+    <erlang:connector name="erlangConnector3" nodeName="muleErlang3" cookie="xyz3" port="30103" />
 
 </mule>

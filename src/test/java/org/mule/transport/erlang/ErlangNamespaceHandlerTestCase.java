@@ -14,6 +14,12 @@ import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
 public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
+
+    public ErlangNamespaceHandlerTestCase() {
+        super();
+        setStartContext(false);
+    }
+
     @Override
     protected String getConfigResources() {
         return "erlang-namespace-config.xml";
@@ -28,7 +34,7 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
     }
 
     public void testFullConnectorConfiguration() throws Exception {
-        testConnectorConfiguration("erlangConnector3", "muleErlang3", "xyz3", Integer.valueOf(5432));
+        testConnectorConfiguration("erlangConnector3", "muleErlang3", "xyz3", Integer.valueOf(30103));
     }
 
     private void testConnectorConfiguration(final String connectorName, final String nodeName, final String cookie,
@@ -36,8 +42,6 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
 
         final ErlangConnector c = (ErlangConnector) muleContext.getRegistry().lookupConnector(connectorName);
         assertNotNull(c);
-        assertTrue(c.isConnected());
-        assertTrue(c.isStarted());
 
         assertEquals(connectorName, c.getName());
         assertEquals(nodeName, c.getNodeName());

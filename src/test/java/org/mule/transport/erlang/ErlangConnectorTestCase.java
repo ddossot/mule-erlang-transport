@@ -16,6 +16,11 @@ import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
 public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
 
+    public ErlangConnectorTestCase() {
+        super();
+        setStartContext(false);
+    }
+
     @Override
     public Connector createConnector() throws Exception {
         final ErlangConnector c = new ErlangConnector();
@@ -27,7 +32,7 @@ public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
 
     @Override
     public String getTestEndpointURI() {
-        return "erlang://hostName:5432/nodeName/processName";
+        return "erlang://hostName:30103/nodeName/processName";
     }
 
     @Override
@@ -39,6 +44,12 @@ public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
         final ErlangConnector erlangConnector = (ErlangConnector) getConnector();
         assertEquals("TestErlangNode", erlangConnector.getNodeName());
         assertEquals("TestCookie", erlangConnector.getCookie());
+    }
+
+    @Override
+    public void testConnectorLifecycle() throws Exception {
+        // Deactivated: this pertains to integration testing more than unit
+        // testing
     }
 
 }

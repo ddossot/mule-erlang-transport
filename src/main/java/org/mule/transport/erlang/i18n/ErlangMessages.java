@@ -10,16 +10,19 @@
 
 package org.mule.transport.erlang.i18n;
 
+import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 
-public class ErlangMessages extends MessageFactory
-{
+public class ErlangMessages extends MessageFactory {
+    private static final ErlangMessages MF = new ErlangMessages();
     private static final String BUNDLE_PATH = getBundlePath("erlang");
 
-    /*
-    public static Message exampleMessage()
-    {
-        return createMessage(BUNDLE_PATH, 1);
+    public static Message missingNodeName() {
+        return MF.createMessage(BUNDLE_PATH, 0);
     }
-    */
+
+    public static Message missingCookieWithPort() {
+        return MF.createMessage(BUNDLE_PATH, 1);
+    }
+
 }

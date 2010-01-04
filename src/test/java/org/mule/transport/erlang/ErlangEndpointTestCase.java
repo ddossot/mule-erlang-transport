@@ -26,11 +26,11 @@ public class ErlangEndpointTestCase extends AbstractMuleTestCase {
     }
 
     public void testValidEndpointUriWithPort() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:5432/nodeName/processName", muleContext);
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:30103/nodeName/processName", muleContext);
         endpointUri.initialise();
-        assertEquals("erlang://hostName:5432/nodeName/processName", endpointUri.getAddress());
+        assertEquals("erlang://hostName:30103/nodeName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
-        assertEquals(5432, endpointUri.getPort());
+        assertEquals(30103, endpointUri.getPort());
         assertEquals("hostName", endpointUri.getHost());
         assertEquals(0, endpointUri.getParams().size());
     }
