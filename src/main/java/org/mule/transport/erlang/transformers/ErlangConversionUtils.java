@@ -1,8 +1,10 @@
 package org.mule.transport.erlang.transformers;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
@@ -20,6 +22,7 @@ import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangRangeException;
 import com.ericsson.otp.erlang.OtpErlangShort;
 import com.ericsson.otp.erlang.OtpErlangString;
+import com.ericsson.otp.erlang.OtpErlangTuple;
 
 /**
  * Supporting methods for Java to Erlang conversion.
@@ -47,6 +50,9 @@ public abstract class ErlangConversionUtils {
     public static OtpErlangObject javaToErlang(final Object obj) throws IllegalArgumentException {
         Validate.notNull(obj, "Can't transform null objects");
 
+        if (obj instanceof OtpErlangObject) {
+            return (OtpErlangObject) obj;
+        }
         if (obj instanceof String) {
             return new OtpErlangString((String) obj);
         }
@@ -77,13 +83,22 @@ public abstract class ErlangConversionUtils {
         if (obj instanceof Boolean) {
             return new OtpErlangBoolean((Boolean) obj);
         }
-        if (obj instanceof Collection<?>) {
-            final Object[] v = ((Collection<?>) obj).toArray(new Object[] {});
-            final OtpErlangObject[] vv = new OtpErlangObject[v.length];
-            for (int i = 0; i < v.length; i++) {
-                vv[i] = javaToErlang(v[i]);
+        if (obj.getClass().isArray()) {
+            final int length = Array.getLength(obj);
+            final OtpErlangObject[] erlangObjects = new OtpErlangObject[length];
+            for (int i = 0; i < length; i++) {
+                erlangObjects[i] = javaToErlang(Array.get(obj, i));
             }
-            return new OtpErlangList(vv);
+            return new OtpErlangTuple(erlangObjects);
+        }
+        if (obj instanceof Collection<?>) {
+            final int size = ((Collection<?>) obj).size();
+            final OtpErlangObject[] erlangObjects = new OtpErlangObject[size];
+            int j = 0;
+            for (final Iterator<?> i = ((Collection<?>) obj).iterator(); i.hasNext();) {
+                erlangObjects[j++] = javaToErlang(i.next());
+            }
+            return new OtpErlangList(erlangObjects);
         }
 
         throw new IllegalArgumentException("Unsupported object of type: " + obj.getClass().getName());
@@ -124,20 +139,27 @@ public abstract class ErlangConversionUtils {
             if (erl instanceof OtpErlangBoolean) {
                 return ((OtpErlangBoolean) erl).booleanValue();
             }
+            if (erl instanceof OtpErlangTuple) {
+                return erlangObjectsToJava(((OtpErlangTuple) erl).elements()).toArray();
+            }
             if (erl instanceof OtpErlangAtom) {
                 return ((OtpErlangAtom) erl).toString();
             }
             if (erl instanceof OtpErlangList) {
-                final List<Object> result = new ArrayList<Object>();
-                for (final OtpErlangObject oeo : ((OtpErlangList) erl).elements()) {
-                    result.add(erlangToJava(oeo));
-                }
-                return result;
+                return erlangObjectsToJava(((OtpErlangList) erl).elements());
             }
         } catch (final OtpErlangRangeException oere) {
             throw new IllegalArgumentException("Can't convert Erlang character", oere);
         }
 
-        throw new IllegalArgumentException("Unsupported object of type: " + erl.getClass().getName());
+        return erl;
+    }
+
+    private static List<Object> erlangObjectsToJava(final OtpErlangObject[] erlangObjects) {
+        final List<Object> result = new ArrayList<Object>();
+        for (final OtpErlangObject erlangObject : erlangObjects) {
+            result.add(erlangToJava(erlangObject));
+        }
+        return result;
     }
 }

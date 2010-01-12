@@ -7,6 +7,8 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangPid;
+import com.ericsson.otp.erlang.OtpErlangString;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -28,7 +30,22 @@ public class ErlangConversionUtilsTest {
     }
 
     @Test
+    public void arrayRoundTrip() {
+        final Object[] value = new Object[] { 1, "a", Math.PI };
+        assertEquals(Arrays.asList(value), Arrays.asList((Object[]) ErlangConversionUtils.erlangToJava(ErlangConversionUtils
+                .javaToErlang(value))));
+    }
+
+    @Test
     public void erlangToJavaOnly() {
         assertEquals("atom", "atom", ErlangConversionUtils.erlangToJava(new OtpErlangAtom("atom")));
+        assertEquals("pid", new OtpErlangPid("test", 1, 2, 3), ErlangConversionUtils.erlangToJava(new OtpErlangPid("test", 1,
+                2, 3)));
+    }
+
+    @Test
+    public void javaToErlangIdempotency() {
+        final OtpErlangString oeString = new OtpErlangString("test");
+        assertEquals("otp object unchanged", oeString, ErlangConversionUtils.javaToErlang(oeString));
     }
 }
