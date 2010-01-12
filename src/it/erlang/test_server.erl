@@ -4,7 +4,6 @@
 main(_) ->
   io:format("test_server started~n"),
   register(mule_test_server, self()),
-  global:register_name(mule_test_server, self()),
   loop().
 
 loop() ->
