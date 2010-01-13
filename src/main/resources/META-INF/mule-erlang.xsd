@@ -56,10 +56,6 @@
     </xsd:complexContent>
   </xsd:complexType>
 
-  <!--
-    The following define endpoint elements for this transport. Attributes for the endpoint can be defined at the section at the
-    bottom
-  -->
   <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint" />
   <xsd:complexType name="inboundEndpointType">
     <xsd:complexContent>
@@ -74,6 +70,7 @@
   <xsd:complexType name="outboundEndpointType">
     <xsd:complexContent>
       <xsd:extension base="mule:outboundEndpointType">
+        <!--  FIXME support nodeName, (processName | (module, function)) -->
         <xsd:attributeGroup ref="addressAttributes" />
         <xsd:attributeGroup ref="propertyAttributes" />
       </xsd:extension>
