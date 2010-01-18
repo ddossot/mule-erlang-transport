@@ -1,5 +1,5 @@
 #!/usr/bin/env escript
-%%! -sname mule_test_server -setcookie mule_test
+%%! -sname mule_test_server -setcookie mule_test -detached
 
 main(_) ->
   io:format("test_server started~n"),

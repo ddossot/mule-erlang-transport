@@ -93,6 +93,67 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>it</id>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>start-erlang-test-server</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>src/it/erlang/test_server.erl</executable>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stop-erlang-test-server</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>src/it/erlang/test_server_ctl.erl</executable>
+                  <arguments>
+                    <argument>stop</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>failsafe-maven-plugin</artifactId>
+            <version>2.4.3-alpha-1</version>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>verify</id>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <!-- plugins for creating site reports -->
   <reporting>
@@ -230,7 +291,7 @@
       <artifactId>mule-module-client</artifactId>
       <version>${mule.version}</version>
     </dependency>
-    
+
     <!-- Erlang dependencies -->
     <dependency>
       <groupId>com.ericsson</groupId>
@@ -238,7 +299,7 @@
       <version>${jinterface.version}</version>
       <classifier>jdk-${jdk.version}</classifier>
     </dependency>
-    
+
     <!-- for testing -->
     <dependency>
       <groupId>org.mule.tests</groupId>

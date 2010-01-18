@@ -70,7 +70,7 @@
   <xsd:complexType name="outboundEndpointType">
     <xsd:complexContent>
       <xsd:extension base="mule:outboundEndpointType">
-        <!--  FIXME support nodeName, (processName | (module, function)) -->
+        <!--  FIXME support nodeName, (processName | (module, function)) | genServerCall | genServerCast -->
         <xsd:attributeGroup ref="addressAttributes" />
         <xsd:attributeGroup ref="propertyAttributes" />
       </xsd:extension>

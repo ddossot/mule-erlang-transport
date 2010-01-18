@@ -13,7 +13,7 @@ stop() ->
   rpc:call(ServerNode, erlang, send, [mule_test_server, {self(), stop}]),
 
   receive
-    stopped -> io:format("test_server stopped~n")
+    stopped -> io:format("test_server stopped~n"), halt(0)
   after
     1000 -> halt(1)
   end.
