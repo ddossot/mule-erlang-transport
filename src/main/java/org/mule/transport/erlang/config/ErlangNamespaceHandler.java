@@ -9,9 +9,11 @@
  */
 package org.mule.transport.erlang.config;
 
+import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
-import org.mule.endpoint.URIBuilder;
+import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
 import org.mule.transport.erlang.ErlangConnector;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
@@ -21,24 +23,13 @@ import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
  * <code><erlang:connector></code> elements and supporting endpoint elements.
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
-    // TODO cleanup
-    public void init() {
-        /*
-         * This creates handlers for 'endpoint', 'outbound-endpoint' and
-         * 'inbound-endpoint' elements. The defaults are sufficient unless you
-         * have endpoint styles different from the Mule standard ones The
-         * URIBuilder as constants for common required attributes, but you can
-         * also pass in a user-defined String[].
-         */
-        registerStandardTransportEndpoints(ErlangConnector.MULETRANSPORTERLANG, URIBuilder.PATH_ATTRIBUTES);
 
-        /*
-         * This will create the handler for your custom 'connector' element. You
-         * will need to add handlers for any other xml elements you define. For
-         * more information see:
-         * http://www.mulesource.org/display/MULE2USER/Creating
-         * +a+Custom+XML+Namespace
-         */
+    public static final String[][] ERLANG_OUTBOUND_ATTRIBUTES = new String[][] { new String[] { "processName" },
+            new String[] { "module", "function" }, new String[] { "genServerCall" }, new String[] { "genServerCast" } };
+
+    public void init() {
+        registerErlangTransportEndpoints();
+
         registerConnectorDefinitionParser(ErlangConnector.class);
 
         registerBeanDefinitionParser("erlang-message-to-object-transformer", new TransformerDefinitionParser(
@@ -47,4 +38,25 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
         registerBeanDefinitionParser("object-erlang-message-transformer", new TransformerDefinitionParser(
                 ObjectToErlangMessage.class));
     }
+
+    private void registerErlangTransportEndpoints() {
+        registerBeanDefinitionParser("endpoint", new TransportGlobalEndpointDefinitionParser(ErlangConnector.ERLANG,
+                TransportGlobalEndpointDefinitionParser.PROTOCOL,
+                TransportGlobalEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_OUTBOUND_ATTRIBUTES,
+                new String[][] {}));
+
+        // FIXME support inbound endpoint configuration
+        // registerBeanDefinitionParser("inbound-endpoint", new
+        // TransportEndpointDefinitionParser(JmsConnector.JMS,
+        // TransportEndpointDefinitionParser.PROTOCOL,
+        // InboundEndpointFactoryBean.class,
+        // TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES,
+        // JMS_ATTRIBUTES, new String[][] {}));
+
+        registerBeanDefinitionParser("outbound-endpoint",
+                new TransportEndpointDefinitionParser(ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL,
+                        OutboundEndpointFactoryBean.class, TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES,
+                        ERLANG_OUTBOUND_ATTRIBUTES, new String[][] {}));
+    }
+
 }

@@ -45,4 +45,15 @@ public class ErlangEndpointTestCase extends AbstractMuleTestCase {
         assertEquals(0, endpointUri.getParams().size());
     }
 
+    public void testValidEndpointUriWithGS() throws Exception {
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:30103/nodeName/gen_server:call:serverName",
+                muleContext);
+        endpointUri.initialise();
+        assertEquals("erlang://hostName:30103/nodeName/gen_server:call:serverName", endpointUri.getAddress());
+        assertEquals("erlang", endpointUri.getScheme());
+        assertEquals(30103, endpointUri.getPort());
+        assertEquals("hostName", endpointUri.getHost());
+        assertEquals(0, endpointUri.getParams().size());
+    }
+
 }

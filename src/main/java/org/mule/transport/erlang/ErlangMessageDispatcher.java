@@ -23,6 +23,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     // FIXME support message dispatching of the form {Pid, Msg}, waiting for
     // {Pid, Msg} when sending
     // FIXME support calling MFA
+    // FIXME support gen_server call and cast
     // LATER allow disabling {Pid, _} wrapping/unwrapping
 
     /*

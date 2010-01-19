@@ -24,7 +24,7 @@ import com.ericsson.otp.erlang.OtpNode;
  */
 public class ErlangConnector extends AbstractConnector {
     /* This constant defines the main transport protocol identifier */
-    public static final String MULETRANSPORTERLANG = "erlang";
+    public static final String ERLANG = "erlang";
 
     private static final Integer DEFAULT_PORT = 0;
 
@@ -82,7 +82,7 @@ public class ErlangConnector extends AbstractConnector {
     }
 
     public String getProtocol() {
-        return MULETRANSPORTERLANG;
+        return ERLANG;
     }
 
     public String getCookie() {

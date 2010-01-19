@@ -41,14 +41,16 @@
         <xsd:attribute name="cookie" type="xsd:string" use="optional">
           <xsd:annotation>
             <xsd:documentation>
-              The authorization cookie that will be used by this connector's node when it communicates with other nodes.
+              The authorization cookie that will be used by this connector's node when it communicates with
+              other nodes.
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="port" type="mule:substitutablePortNumber" default="0" use="optional">
           <xsd:annotation>
             <xsd:documentation>
-              The port number you wish to use for incoming connections. Specifying 0 lets the system choose an available port.
+              The port number you wish to use for incoming connections. Specifying 0 lets the system choose an
+              available port.
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
@@ -70,7 +72,6 @@
   <xsd:complexType name="outboundEndpointType">
     <xsd:complexContent>
       <xsd:extension base="mule:outboundEndpointType">
-        <!--  FIXME support nodeName, (processName | (module, function)) | genServerCall | genServerCast -->
         <xsd:attributeGroup ref="addressAttributes" />
         <xsd:attributeGroup ref="propertyAttributes" />
       </xsd:extension>
@@ -92,6 +93,42 @@
       TODO define address attributes for this endpoints i.e. queue, host, port, etc <xsd:attribute name="foo"
       type="xsd:string"/>
     -->
+    <xsd:attribute name="nodeName" type="xsd:string" />
+    <xsd:attribute name="processName" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          This attribute cannot be used with the module, function, genServerCall and genServerCast attributes.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="module" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          This attribute must be used with the function attribute and cannot be used with the processName, genServerCall and genServerCast attributes.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="function" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          This attribute must be used with the module attribute and cannot be used with the processName, genServerCall and genServerCast attributes.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="genServerCall" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          This cannot be used with the processName, module, function, genServerCast attributes.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="genServerCast" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          This cannot be used with the processName, module, function, genServerCall attributes.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:attributeGroup>
 
   <xsd:attributeGroup name="propertyAttributes">

@@ -12,5 +12,10 @@
     <erlang:connector name="erlangConnector1" nodeName="muleErlang1" />
     <erlang:connector name="erlangConnector2" nodeName="muleErlang2" cookie="xyz2" />
     <erlang:connector name="erlangConnector3" nodeName="muleErlang3" cookie="xyz3" port="30103" />
+    
+    <erlang:endpoint name="erlangEndpoint1" nodeName="remoteNode1" processName="process1" />
+    <erlang:endpoint name="erlangEndpoint2" nodeName="remoteNode2" module="module2" function="function2" />
+    <erlang:endpoint name="erlangEndpoint3" nodeName="remoteNode3" genServerCall="server3" />
+    <erlang:endpoint name="erlangEndpoint4" nodeName="remoteNode4" genServerCast="server4" />
 
 </mule>
