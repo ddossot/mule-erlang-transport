@@ -15,6 +15,9 @@ import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
 
+import com.ericsson.otp.erlang.OtpConnection;
+import com.ericsson.otp.erlang.OtpPeer;
+
 /**
  * <code>ErlangMessageDispatcher</code> TODO document
  */
@@ -26,43 +29,30 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     // FIXME support gen_server call and cast
     // LATER allow disabling {Pid, _} wrapping/unwrapping
 
-    /*
-     * For general guidelines on writing transports see
-     * http://mule.mulesource.org/display/MULE/Writing+Transports
-     */
+    private final ErlangConnector connector;
+    private final OtpPeer otpPeer;
+    private OtpConnection otpConnection;
 
     public ErlangMessageDispatcher(final OutboundEndpoint endpoint) {
         super(endpoint);
-
-        /*
-         * IMPLEMENTATION NOTE: If you need a reference to the specific
-         * connector for this dispatcher use:
-         * 
-         * ErlangConnector cnn = (ErlangConnector)endpoint.getConnector();
-         */
+        connector = (ErlangConnector) endpoint.getConnector();
+        // FIXME wrong! get value of nodeName attribute on endpoint
+        otpPeer = new OtpPeer(endpoint.getEndpointURI().getAddress());
     }
 
     @Override
     public void doConnect() throws Exception {
-        /*
-         * IMPLEMENTATION NOTE: Makes a connection to the underlying resource.
-         * Where connections are managed by the connector this method may do
-         * nothing
-         */
-
-        // If a resource for this Dispatcher needs a connection established,
-        // then this is the place to do it
+        otpConnection = connector.connectToPeer(otpPeer);
     }
 
     @Override
     public void doDisconnect() throws Exception {
-        /*
-         * IMPLEMENTATION NOTE: Disconnect any conections made in the connect
-         * method
-         */
+        otpConnection.close();
+    }
 
-        // If the connect method did not do anything then this method
-        // shouldn't do anything either
+    @Override
+    public void doDispose() {
+        // NOOP
     }
 
     @Override
@@ -113,16 +103,6 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         // TODO Once the event has been sent, return the result (if any)
         // wrapped in a MuleMessage object
         throw new UnsupportedOperationException("doSend");
-    }
-
-    @Override
-    public void doDispose() {
-        // Optional; does not need to be implemented. Delete if not required
-
-        /*
-         * IMPLEMENTATION NOTE: Is called when the Dispatcher is being disposed
-         * and should clean up any open resources.
-         */
     }
 
 }
