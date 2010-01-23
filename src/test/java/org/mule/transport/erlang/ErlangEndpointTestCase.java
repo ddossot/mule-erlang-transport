@@ -16,43 +16,25 @@ import org.mule.tck.AbstractMuleTestCase;
 
 public class ErlangEndpointTestCase extends AbstractMuleTestCase {
 
-    public void testValidEndpointUri() throws Exception {
+    // FIXME these tests are not consistent with node names expresses as
+    // nodeName@hostName (Erlang way)
+    public void testValidEndpointUriWithHostname() throws Exception {
         final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName/nodeName/processName", muleContext);
         endpointUri.initialise();
         assertEquals("erlang://hostName/nodeName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
         assertEquals("hostName", endpointUri.getHost());
+        assertEquals("/nodeName/processName", endpointUri.getPath());
         assertEquals(0, endpointUri.getParams().size());
     }
 
-    public void testValidEndpointUriWithPort() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:30103/nodeName/processName", muleContext);
+    public void testValidLocalEndpointUri() throws Exception {
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang:///nodeName/processName", muleContext);
         endpointUri.initialise();
-        assertEquals("erlang://hostName:30103/nodeName/processName", endpointUri.getAddress());
+        assertEquals("/nodeName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
-        assertEquals(30103, endpointUri.getPort());
-        assertEquals("hostName", endpointUri.getHost());
-        assertEquals(0, endpointUri.getParams().size());
-    }
-
-    public void testValidEndpointUriWithMF() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:30103/nodeName/module:function", muleContext);
-        endpointUri.initialise();
-        assertEquals("erlang://hostName:30103/nodeName/module:function", endpointUri.getAddress());
-        assertEquals("erlang", endpointUri.getScheme());
-        assertEquals(30103, endpointUri.getPort());
-        assertEquals("hostName", endpointUri.getHost());
-        assertEquals(0, endpointUri.getParams().size());
-    }
-
-    public void testValidEndpointUriWithGS() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName:30103/nodeName/gen_server:call:serverName",
-                muleContext);
-        endpointUri.initialise();
-        assertEquals("erlang://hostName:30103/nodeName/gen_server:call:serverName", endpointUri.getAddress());
-        assertEquals("erlang", endpointUri.getScheme());
-        assertEquals(30103, endpointUri.getPort());
-        assertEquals("hostName", endpointUri.getHost());
+        assertNull(endpointUri.getHost());
+        assertEquals("/nodeName/processName", endpointUri.getPath());
         assertEquals(0, endpointUri.getParams().size());
     }
 

@@ -9,12 +9,11 @@
  */
 package org.mule.transport.erlang.config;
 
-import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
+import org.mule.endpoint.URIBuilder;
 import org.mule.transport.erlang.ErlangConnector;
+import org.mule.transport.erlang.ErlangProperties;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
@@ -24,11 +23,13 @@ import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
-    public static final String[][] ERLANG_OUTBOUND_ATTRIBUTES = new String[][] { new String[] { "processName" },
-            new String[] { "module", "function" }, new String[] { "genServerCall" }, new String[] { "genServerCast" } };
-
     public void init() {
-        registerErlangTransportEndpoints();
+        // TODO add required attributes here and in schema based on how the
+        // receiver and requester will evolve
+        registerStandardTransportEndpoints(ErlangConnector.ERLANG,
+                new String[] { ErlangProperties.NODE_NAME_PROPERTY, ErlangProperties.PROCESS_NAME_PROPERTY }).addAlias(
+                ErlangProperties.PROCESS_NAME_PROPERTY, URIBuilder.PATH).addAlias(ErlangProperties.NODE_NAME_PROPERTY,
+                URIBuilder.HOST);
 
         registerConnectorDefinitionParser(ErlangConnector.class);
 
@@ -37,26 +38,6 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
         registerBeanDefinitionParser("object-erlang-message-transformer", new TransformerDefinitionParser(
                 ObjectToErlangMessage.class));
-    }
-
-    private void registerErlangTransportEndpoints() {
-        registerBeanDefinitionParser("endpoint", new TransportGlobalEndpointDefinitionParser(ErlangConnector.ERLANG,
-                TransportGlobalEndpointDefinitionParser.PROTOCOL,
-                TransportGlobalEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_OUTBOUND_ATTRIBUTES,
-                new String[][] {}));
-
-        // FIXME support inbound endpoint configuration
-        // registerBeanDefinitionParser("inbound-endpoint", new
-        // TransportEndpointDefinitionParser(JmsConnector.JMS,
-        // TransportEndpointDefinitionParser.PROTOCOL,
-        // InboundEndpointFactoryBean.class,
-        // TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES,
-        // JMS_ATTRIBUTES, new String[][] {}));
-
-        registerBeanDefinitionParser("outbound-endpoint",
-                new TransportEndpointDefinitionParser(ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL,
-                        OutboundEndpointFactoryBean.class, TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES,
-                        ERLANG_OUTBOUND_ATTRIBUTES, new String[][] {}));
     }
 
 }

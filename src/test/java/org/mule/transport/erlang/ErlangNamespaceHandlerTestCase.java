@@ -9,6 +9,10 @@
  */
 package org.mule.transport.erlang;
 
+import org.mule.api.MuleException;
+import org.mule.api.endpoint.EndpointFactory;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
@@ -25,15 +29,9 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
         return "erlang-namespace-config.xml";
     }
 
-    public void testMinimalConnectorConfiguration() throws Exception {
+    public void testConnectorConfigurations() throws Exception {
         testConnectorConfiguration("erlangConnector1", "muleErlang1", null, Integer.valueOf(0));
-    }
-
-    public void testIntermediateConnectorConfiguration() throws Exception {
         testConnectorConfiguration("erlangConnector2", "muleErlang2", "xyz2", Integer.valueOf(0));
-    }
-
-    public void testFullConnectorConfiguration() throws Exception {
         testConnectorConfiguration("erlangConnector3", "muleErlang3", "xyz3", Integer.valueOf(30103));
     }
 
@@ -55,5 +53,24 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
 
         assertTrue("ObjectToErlangMessage configured",
                 muleContext.getRegistry().lookupTransformer("o2eTransformer") instanceof ObjectToErlangMessage);
+    }
+
+    public void testOutboundEndpointConfiguration() throws Exception {
+        final EndpointFactory endpointFactory = muleContext.getRegistry().lookupEndpointFactory();
+        testEndpointConfiguration(endpointFactory, "erlangEndpoint1");
+        testEndpointConfiguration(endpointFactory, "erlangEndpoint2");
+        testEndpointConfiguration(endpointFactory, "erlangEndpoint3");
+    }
+
+    private void testEndpointConfiguration(final EndpointFactory endpointFactory, final String endpointName)
+            throws MuleException {
+        // FIXME assert stuff
+        final OutboundEndpoint outboundEndpoint = endpointFactory.getOutboundEndpoint(endpointName);
+        System.out.println(outboundEndpoint);
+        final EndpointURI endpointURI = outboundEndpoint.getEndpointURI();
+        System.out.println(endpointURI);
+        System.out.println(endpointURI.getHost());
+        System.out.println(endpointURI.getPath());
+        System.out.println(endpointURI.getParams());
     }
 }

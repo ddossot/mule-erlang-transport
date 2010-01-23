@@ -18,11 +18,10 @@ import org.mule.transport.AbstractMessageRequesterFactory;
 /**
  * <code>ErlangMessageRequester</code> TODO document
  */
-public class ErlangMessageRequesterFactory extends AbstractMessageRequesterFactory
-{
+public class ErlangMessageRequesterFactory extends AbstractMessageRequesterFactory {
 
-    public MessageRequester create(InboundEndpoint endpoint) throws MuleException
-    {
+    @Override
+    public MessageRequester create(final InboundEndpoint endpoint) throws MuleException {
         return new ErlangMessageRequester(endpoint);
     }
 

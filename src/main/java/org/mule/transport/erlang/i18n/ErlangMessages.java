@@ -25,4 +25,8 @@ public class ErlangMessages extends MessageFactory {
         return MF.createMessage(BUNDLE_PATH, 1);
     }
 
+    public static Message nodeUnreachable(final String nodeName) {
+        return MF.createMessage(BUNDLE_PATH, 2, nodeName);
+    }
+
 }

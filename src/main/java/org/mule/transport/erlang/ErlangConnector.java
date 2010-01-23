@@ -10,21 +10,15 @@
 
 package org.mule.transport.erlang;
 
-import java.io.IOException;
-
 import org.apache.commons.lang.Validate;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.StartException;
-import org.mule.api.lifecycle.StopException;
 import org.mule.api.transport.ConnectorException;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
-import com.ericsson.otp.erlang.OtpAuthException;
-import com.ericsson.otp.erlang.OtpConnection;
-import com.ericsson.otp.erlang.OtpPeer;
-import com.ericsson.otp.erlang.OtpSelf;
+import com.ericsson.otp.erlang.OtpMbox;
+import com.ericsson.otp.erlang.OtpNode;
 
 /**
  * <code>ErlangConnector</code> TODO document
@@ -40,7 +34,7 @@ public class ErlangConnector extends AbstractConnector {
     private Integer port;
     // TODO add an option for attempting to start EPMD if not running
 
-    private OtpSelf otpSelf;
+    private OtpNode otpNode;
 
     @Override
     protected void doInitialise() throws InitialisationException {
@@ -49,49 +43,48 @@ public class ErlangConnector extends AbstractConnector {
 
     @Override
     public void doConnect() throws Exception {
+        // FIXME rethink this: it would be more flexible to let the Connectable
+        // create their own OtpNode, allowing usage of different cookies per
+        // Endpoints...
         if (port != null && !DEFAULT_PORT.equals(port)) {
             if (cookie == null) {
                 throw new ConnectorException(ErlangMessages.missingCookieWithPort(), this);
             }
-            otpSelf = new OtpSelf(nodeName, cookie, port);
+            otpNode = new OtpNode(nodeName, cookie, port);
 
         } else {
             if (cookie != null) {
-                otpSelf = new OtpSelf(nodeName, cookie);
+                otpNode = new OtpNode(nodeName, cookie);
             } else {
-                otpSelf = new OtpSelf(nodeName);
+                otpNode = new OtpNode(nodeName);
             }
         }
 
-        logger.info("OTP Node " + otpSelf.alive() + "@" + otpSelf.node() + ":" + otpSelf.port() + " is ready.");
+        logger.info("OTP Node " + otpNode.alive() + "@" + otpNode.node() + ":" + otpNode.port() + " is ready.");
     }
 
     @Override
     protected void doStart() throws MuleException {
-        try {
-            otpSelf.publishPort();
-        } catch (final IOException ioe) {
-            throw new StartException(ioe, this);
-        }
-    }
-
-    @Override
-    protected void doStop() throws MuleException {
-        otpSelf.unPublishPort();
-    }
-
-    @Override
-    public void doDisconnect() throws Exception {
         // NOOP
     }
 
     @Override
-    protected void doDispose() {
-        otpSelf = null;
+    protected void doStop() throws MuleException {
+        // NOOP
     }
 
-    public OtpConnection connectToPeer(final OtpPeer otpPeer) throws OtpAuthException, IOException {
-        return otpSelf.connect(otpPeer);
+    @Override
+    public void doDisconnect() throws Exception {
+        otpNode.close();
+    }
+
+    @Override
+    protected void doDispose() {
+        otpNode = null;
+    }
+
+    public OtpMbox createMailBox() {
+        return otpNode.createMbox();
     }
 
     public String getProtocol() {

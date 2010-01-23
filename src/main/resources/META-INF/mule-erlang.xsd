@@ -34,7 +34,7 @@
         <xsd:attribute name="nodeName" type="mule:substitutableName" use="required">
           <xsd:annotation>
             <xsd:documentation>
-              The name of this connector's node.
+              The name of the Erlang node that this connector will create within Mule.
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
@@ -89,45 +89,38 @@
   </xsd:complexType>
 
   <xsd:attributeGroup name="addressAttributes">
-    <!--
-      TODO define address attributes for this endpoints i.e. queue, host, port, etc <xsd:attribute name="foo"
-      type="xsd:string"/>
-    -->
-    <xsd:attribute name="nodeName" type="xsd:string" />
-    <xsd:attribute name="processName" type="xsd:string">
+    <xsd:attribute name="processName" type="xsd:string" use="required">
       <xsd:annotation>
         <xsd:documentation>
-          This attribute cannot be used with the module, function, genServerCall and genServerCast attributes.
+          An Erlang process name.
                 </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="module" type="xsd:string">
+    <xsd:attribute name="nodeName" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>
-          This attribute must be used with the function attribute and cannot be used with the processName, genServerCall and genServerCast attributes.
-        </xsd:documentation>
+          An Erlang node name (name or name@host).
+                </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="function" type="xsd:string">
+    <xsd:attribute name="invocationType" default="PID_WRAPPED">
       <xsd:annotation>
         <xsd:documentation>
-          This attribute must be used with the module attribute and cannot be used with the processName, genServerCall and genServerCast attributes.
+          The type of invocation used to contact the target process.
         </xsd:documentation>
       </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="genServerCall" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>
-          This cannot be used with the processName, module, function, genServerCast attributes.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="genServerCast" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>
-          This cannot be used with the processName, module, function, genServerCall attributes.
-        </xsd:documentation>
-      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="RAW" />
+          <xsd:enumeration value="PID_WRAPPED">
+            <xsd:annotation>
+              <xsd:documentation>Wraps the current payload like this: {SenderPid, Payload}</xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="GS_CALL" />
+          <xsd:enumeration value="GS_CAST" />
+        </xsd:restriction>
+      </xsd:simpleType>
     </xsd:attribute>
   </xsd:attributeGroup>
 
