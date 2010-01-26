@@ -16,26 +16,24 @@ import org.mule.tck.AbstractMuleTestCase;
 
 public class ErlangEndpointTestCase extends AbstractMuleTestCase {
 
-    // FIXME these tests are not consistent with node names expresses as
-    // nodeName@hostName (Erlang way)
     public void testValidEndpointUriWithHostname() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://hostName/nodeName/processName", muleContext);
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang://nodeName@hostName/processName", muleContext);
         endpointUri.initialise();
-        assertEquals("erlang://hostName/nodeName/processName", endpointUri.getAddress());
+        assertEquals("erlang://hostName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
         assertEquals("hostName", endpointUri.getHost());
-        assertEquals("/nodeName/processName", endpointUri.getPath());
-        assertEquals(0, endpointUri.getParams().size());
+        assertEquals("nodeName", endpointUri.getUser());
+        assertEquals("/processName", endpointUri.getPath());
     }
 
     public void testValidLocalEndpointUri() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang:///nodeName/processName", muleContext);
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang://nodeName/processName", muleContext);
         endpointUri.initialise();
-        assertEquals("/nodeName/processName", endpointUri.getAddress());
+        assertEquals("erlang://nodeName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
-        assertNull(endpointUri.getHost());
-        assertEquals("/nodeName/processName", endpointUri.getPath());
-        assertEquals(0, endpointUri.getParams().size());
+        assertEquals("nodeName", endpointUri.getHost());
+        assertNull(endpointUri.getUser());
+        assertEquals("/processName", endpointUri.getPath());
     }
 
 }

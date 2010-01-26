@@ -103,6 +103,9 @@
                 </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+  </xsd:attributeGroup>
+
+  <xsd:attributeGroup name="propertyAttributes">
     <xsd:attribute name="invocationType" default="PID_WRAPPED">
       <xsd:annotation>
         <xsd:documentation>
@@ -122,13 +125,6 @@
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
-  </xsd:attributeGroup>
-
-  <xsd:attributeGroup name="propertyAttributes">
-    <!--
-      TODO define property attributes for this endpoint. These are properties that can configure the way the transport behaves
-      but are not used to create the endpoint address. <xsd:attribute name="bar" type="xsd:string"/>
-    -->
   </xsd:attributeGroup>
 
 

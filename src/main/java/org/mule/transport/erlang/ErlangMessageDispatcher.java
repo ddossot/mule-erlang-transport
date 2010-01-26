@@ -13,9 +13,11 @@ package org.mule.transport.erlang;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
 import org.mule.transport.ConnectException;
+import org.mule.transport.erlang.ErlangProperties.InvocationType;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
@@ -26,14 +28,10 @@ import com.ericsson.otp.erlang.OtpMbox;
  */
 public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
-    // FIXME support message dispatching of the form {Pid, Msg}, waiting for
-    // {Pid, Msg} when sending
-    // FIXME support gen_server call and cast
-    // LATER allow disabling {Pid, _} wrapping/unwrapping
-
     private final ErlangConnector connector;
     private final String targetNodeName; // contains node or node@host
     private final String targetProcessName;
+    private final InvocationType invocationType;
 
     private OtpMbox otpMbox;
 
@@ -41,9 +39,11 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         super(endpoint);
         connector = (ErlangConnector) endpoint.getConnector();
 
-        // FIXME wrong! get value of nodeName attribute on endpoint
-        targetNodeName = endpoint.getEndpointURI().getAddress();
-        targetProcessName = endpoint.getEndpointURI().getPath();
+        invocationType = ErlangUtils.getInvocationType(endpoint);
+
+        final EndpointURI endpointURI = endpoint.getEndpointURI();
+        targetNodeName = ErlangUtils.getErlangNodeName(endpointURI);
+        targetProcessName = ErlangUtils.getProcessName(endpointURI);
     }
 
     @Override
@@ -67,8 +67,14 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     @Override
     public void doDispatch(final MuleEvent event) throws Exception {
-        final String targetMailBox = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY, targetProcessName);
+        // supports message level override of the target process (for dynamic
+        // dispatch)
+        final String targetMailBox = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
+                targetProcessName);
+
         final OtpErlangObject payload = (OtpErlangObject) event.transformMessage();
+
+        // FIXME wrap payload based on invocationType
         otpMbox.send(targetMailBox, payload);
     }
 

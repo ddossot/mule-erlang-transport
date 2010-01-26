@@ -43,9 +43,6 @@ public class ErlangConnector extends AbstractConnector {
 
     @Override
     public void doConnect() throws Exception {
-        // FIXME rethink this: it would be more flexible to let the Connectable
-        // create their own OtpNode, allowing usage of different cookies per
-        // Endpoints...
         if (port != null && !DEFAULT_PORT.equals(port)) {
             if (cookie == null) {
                 throw new ConnectorException(ErlangMessages.missingCookieWithPort(), this);
