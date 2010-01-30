@@ -1,13 +1,14 @@
 -module(test_gen_server).
 -behaviour(gen_server).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
--record(state, {}).
 
-init([]) ->  {ok, #state{}}.
+init([]) ->  {ok, undefined}.
 
-handle_call(Request, _From, State) -> {reply, {ack, Request}, State}.
+%% return inbound message and current state - reset state
+handle_call(Msg, _From, State) -> {reply, {ack, Msg, State}, undefined}.
 
-handle_cast(_Msg, State) -> {noreply, State}.
+%% set state to inbound message
+handle_cast(Msg, _State) -> {noreply, Msg}.
 
 handle_info(_Info, State) -> {noreply, State}.
 

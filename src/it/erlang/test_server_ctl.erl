@@ -2,12 +2,16 @@
 %%! -sname mule_test_server_node_ctl -setcookie mule_test_cookie
 
 main(["test_send"]) -> test_send();
+main(["test_gs_cast"]) -> test_gs_cast();
 main(["test_gs_call"]) -> test_gs_call();
 main(["stop"]) -> stop();
 main(_) -> usage().
 
 usage() ->
   io:format("usage: test_server_ctl stop~n"),
+  io:format("       test_server_ctl test_send~n"),
+  io:format("       test_server_ctl test_gs_cast~n"),
+  io:format("       test_server_ctl test_gs_call~n"),
   halt(1).
 
 stop() ->
@@ -28,9 +32,15 @@ test_send() ->
     1000 -> halt(1)
   end.
 
+test_gs_cast() ->
+  case gen_server:cast({mule_test_gen_server, server_node()}, gs_cast) of
+    ok -> io:format("gen_server cast ok~n"), timer:sleep(500), halt(0);
+    _ -> halt(1)
+  end.
+
 test_gs_call() ->
-  case gen_server:call({mule_test_gen_server, server_node()}, gs_testing) of
-    {ack, gs_testing} -> io:format("gen_server call ok~n"), halt(0);
+  case gen_server:call({mule_test_gen_server, server_node()}, gs_call) of
+    {ack, gs_call, State} -> io:format("gen_server call ok with state: ~p~n", [State]), halt(0);
     _ -> halt(1)
   end.
 
