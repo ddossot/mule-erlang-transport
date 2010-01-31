@@ -31,4 +31,5 @@ public abstract class ErlangUtils {
         Validate.notNull(invocationTypeProperty, ErlangMessages.nullInvocationTypeEndpointProperty().getMessage());
         return ErlangProperties.InvocationType.valueOf(invocationTypeProperty.toString());
     }
+
 }

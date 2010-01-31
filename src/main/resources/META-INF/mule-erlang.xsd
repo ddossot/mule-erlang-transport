@@ -125,6 +125,14 @@
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
+
+    <xsd:attribute name="failIfTimeout" type="mule:substitutableBoolean" default="false">
+      <xsd:annotation>
+        <xsd:documentation>
+          Defines if a send operation should fail if the response didn't come in time.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:attributeGroup>
 
 

@@ -17,13 +17,14 @@ import org.mule.api.transport.ConnectorException;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
+import com.ericsson.otp.erlang.OtpErlangRef;
 import com.ericsson.otp.erlang.OtpMbox;
 import com.ericsson.otp.erlang.OtpNode;
 
 /**
  * <code>ErlangConnector</code> TODO document
  */
-public class ErlangConnector extends AbstractConnector {
+public class ErlangConnector extends AbstractConnector implements ErlangReferenceFactory {
     /* This constant defines the main transport protocol identifier */
     public static final String ERLANG = "erlang";
 
@@ -82,6 +83,10 @@ public class ErlangConnector extends AbstractConnector {
 
     public OtpMbox createMailBox() {
         return otpNode.createMbox();
+    }
+
+    public OtpErlangRef createRef() {
+        return otpNode.createRef();
     }
 
     public String getProtocol() {

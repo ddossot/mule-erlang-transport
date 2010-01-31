@@ -14,6 +14,6 @@
   <erlang:endpoint name="erlangEndpoint1" nodeName="localNode1" processName="process1" connector-ref="erlangConnector1" />
   <erlang:endpoint name="erlangEndpoint2" nodeName="remoteNode2@hostName" processName="process2" connector-ref="erlangConnector1" />
   <erlang:endpoint name="erlangEndpoint3" nodeName="remoteNode3@hostName" processName="process3" invocationType="GS_CALL"
-    connector-ref="erlangConnector1" />
+    connector-ref="erlangConnector1" failIfTimeout="true" />
 
 </mule>
