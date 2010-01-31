@@ -89,6 +89,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher implement
             }
         };
 
+        // FIXME parse result
         otpMbox.send(targetMailBox, invocationType.makeInvocation(invocationContext));
     }
 

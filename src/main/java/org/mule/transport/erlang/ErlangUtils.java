@@ -6,6 +6,9 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
+import com.ericsson.otp.erlang.OtpErlangObject;
+import com.ericsson.otp.erlang.OtpErlangTuple;
+
 public abstract class ErlangUtils {
     private ErlangUtils() {
         throw new UnsupportedOperationException("do not instantiate");
@@ -30,6 +33,10 @@ public abstract class ErlangUtils {
         final Object invocationTypeProperty = ie.getProperty("invocationType");
         Validate.notNull(invocationTypeProperty, ErlangMessages.nullInvocationTypeEndpointProperty().getMessage());
         return ErlangProperties.InvocationType.valueOf(invocationTypeProperty.toString());
+    }
+
+    public static OtpErlangTuple makeTuple(final OtpErlangObject... otpErlangObjects) {
+        return new OtpErlangTuple(otpErlangObjects);
     }
 
 }

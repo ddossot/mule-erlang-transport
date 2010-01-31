@@ -31,21 +31,18 @@ import com.ericsson.otp.erlang.OtpErlangTuple;
  */
 public abstract class ErlangConversionUtils {
 
-    // TODO add support for Array <-> Tuple, Map <-> PropList, stream/byte[] <->
-    // Binary conversions
+    // FIXME add support for Map <-> PropList, stream/byte[] <-> Binary conversions
 
     private ErlangConversionUtils() {
         throw new UnsupportedOperationException("do not instantiate");
     }
 
     /**
-     * This method comes from Erlide, the awesome Eclipse plug-in for Erlang
-     * development.
+     * This method comes from Erlide, the awesome Eclipse plug-in for Erlang development.
      * 
-     * Copyright (c) 2008 Vlad Dumitrescu and others. All rights reserved. This
-     * program and the accompanying materials are made available under the terms
-     * of the Eclipse Public License v1.0 which accompanies this distribution,
-     * and is available at http://www.eclipse.org/legal/epl-v10.html
+     * Copyright (c) 2008 Vlad Dumitrescu and others. All rights reserved. This program and the accompanying materials are made
+     * available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+     * http://www.eclipse.org/legal/epl-v10.html
      */
     public static OtpErlangObject javaToErlang(final Object obj) throws IllegalArgumentException {
         Validate.notNull(obj, "Can't transform null objects");

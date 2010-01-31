@@ -1,7 +1,7 @@
 package org.mule.transport.erlang;
 
+import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
-import com.ericsson.otp.erlang.OtpErlangTuple;
 
 public abstract class ErlangProperties {
     private ErlangProperties() {
@@ -9,35 +9,39 @@ public abstract class ErlangProperties {
     }
 
     public static enum InvocationType {
+        // Msg
         RAW {
             @Override
             OtpErlangObject makeInvocation(final InvocationContext invocationContext) {
                 return invocationContext.getMessage();
             }
         },
+        // {Pid, Msg}
         PID_WRAPPED {
             @Override
             OtpErlangObject makeInvocation(final InvocationContext invocationContext) {
-                return new OtpErlangTuple(new OtpErlangObject[] { invocationContext.getErlangPidWrapper().getPid(),
-                        invocationContext.getMessage() });
+                return ErlangUtils.makeTuple(invocationContext.getErlangPidWrapper().getPid(), invocationContext.getMessage());
             }
         },
+        // {'$gen_call',{<Pid Sender>,Ref},Msg}
         GS_CALL {
             @Override
             OtpErlangObject makeInvocation(final InvocationContext invocationContext) {
-                // FIXME code me ;-)
-                throw new UnsupportedOperationException("implement me!");
+                return ErlangUtils.makeTuple(new OtpErlangAtom("gen_call"), ErlangUtils.makeTuple(invocationContext
+                        .getErlangPidWrapper().getPid(), invocationContext.getErlangReferenceFactory().createRef()),
+                        invocationContext.getMessage());
             }
         },
+        // {'$gen_cast',hello}
         GS_CAST {
             @Override
             OtpErlangObject makeInvocation(final InvocationContext invocationContext) {
-                // FIXME code me ;-)
-                throw new UnsupportedOperationException("implement me!");
+                return ErlangUtils.makeTuple(new OtpErlangAtom("$gen_cast"), invocationContext.getMessage());
             }
         };
 
         abstract OtpErlangObject makeInvocation(InvocationContext invocationContext);
+        // FIXME add parseResult, mainly for gen_server call response
     };
 
     public interface InvocationContext {
