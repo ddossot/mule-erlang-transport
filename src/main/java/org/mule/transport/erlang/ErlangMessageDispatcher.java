@@ -17,8 +17,7 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
 import org.mule.transport.ConnectException;
-import org.mule.transport.erlang.ErlangProperties.InvocationContext;
-import org.mule.transport.erlang.ErlangProperties.InvocationType;
+import org.mule.transport.erlang.ErlangInvocation.InvocationType;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
@@ -28,7 +27,7 @@ import com.ericsson.otp.erlang.OtpMbox;
 /**
  * <code>ErlangMessageDispatcher</code> TODO document
  */
-public class ErlangMessageDispatcher extends AbstractMessageDispatcher implements ErlangPidWrapper {
+public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     private final ErlangConnector connector;
     private final String targetNodeName; // contains node or node@host
@@ -69,37 +68,20 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher implement
 
     @Override
     public void doDispatch(final MuleEvent event) throws Exception {
-        // supports message level override of the target process (for dynamic dispatch)
-        final String targetMailBox = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
-                targetProcessName);
-
-        final OtpErlangObject payload = (OtpErlangObject) event.transformMessage();
-
-        final InvocationContext invocationContext = new InvocationContext() {
-            public ErlangPidWrapper getErlangPidWrapper() {
-                return ErlangMessageDispatcher.this;
-            }
-
-            public ErlangReferenceFactory getErlangReferenceFactory() {
-                return connector;
-            }
-
-            public OtpErlangObject getMessage() {
-                return payload;
-            }
-        };
-
-        // FIXME parse result
-        otpMbox.send(targetMailBox, invocationType.makeInvocation(invocationContext));
+        doInvokeRemote(event);
     }
 
     @Override
     public MuleMessage doSend(final MuleEvent event) throws Exception {
-        doDispatch(event);
-        final OtpErlangObject result = otpMbox.receive(event.getTimeout());
+        return new DefaultMuleMessage(doInvokeRemote(event), connector.getMuleContext());
+    }
 
-        // FIXME support failIfTimeout property
-        return new DefaultMuleMessage(result, connector.getMuleContext());
+    private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception {
+        // supports message level override of the target process (for dynamic dispatch)
+        final String invocationTargetProcessName = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
+                targetProcessName);
+
+        return new ErlangInvocation(connector, otpMbox, invocationTargetProcessName, invocationType, event).call();
     }
 
     public OtpErlangPid getPid() {

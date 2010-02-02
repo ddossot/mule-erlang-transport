@@ -24,7 +24,7 @@ import com.ericsson.otp.erlang.OtpNode;
 /**
  * <code>ErlangConnector</code> TODO document
  */
-public class ErlangConnector extends AbstractConnector implements ErlangReferenceFactory {
+public class ErlangConnector extends AbstractConnector {
     /* This constant defines the main transport protocol identifier */
     public static final String ERLANG = "erlang";
 

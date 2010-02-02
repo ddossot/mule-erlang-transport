@@ -29,10 +29,10 @@ public abstract class ErlangUtils {
         return StringUtils.stripStart(euri.getPath(), "/");
     }
 
-    public static ErlangProperties.InvocationType getInvocationType(final ImmutableEndpoint ie) {
+    public static ErlangInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {
         final Object invocationTypeProperty = ie.getProperty("invocationType");
         Validate.notNull(invocationTypeProperty, ErlangMessages.nullInvocationTypeEndpointProperty().getMessage());
-        return ErlangProperties.InvocationType.valueOf(invocationTypeProperty.toString());
+        return ErlangInvocation.InvocationType.valueOf(invocationTypeProperty.toString());
     }
 
     public static OtpErlangTuple makeTuple(final OtpErlangObject... otpErlangObjects) {

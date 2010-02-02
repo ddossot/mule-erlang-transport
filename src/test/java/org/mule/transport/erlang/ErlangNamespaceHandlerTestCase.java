@@ -58,16 +58,16 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
     public void testOutboundEndpointConfiguration() throws Exception {
         final EndpointFactory endpointFactory = muleContext.getRegistry().lookupEndpointFactory();
         testEndpointConfiguration(endpointFactory, "erlangEndpoint1", "localNode1", "process1",
-                ErlangProperties.InvocationType.PID_WRAPPED);
+                ErlangInvocation.InvocationType.PID_WRAPPED);
         testEndpointConfiguration(endpointFactory, "erlangEndpoint2", "remoteNode2@hostName", "process2",
-                ErlangProperties.InvocationType.PID_WRAPPED);
+                ErlangInvocation.InvocationType.PID_WRAPPED);
         testEndpointConfiguration(endpointFactory, "erlangEndpoint3", "remoteNode3@hostName", "process3",
-                ErlangProperties.InvocationType.GS_CALL);
+                ErlangInvocation.InvocationType.GS_CALL);
     }
 
     private void testEndpointConfiguration(final EndpointFactory endpointFactory, final String endpointName,
             final String expectedErlangNodeName, final String exectedProcessName,
-            final ErlangProperties.InvocationType expectedInvocationType) throws MuleException {
+            final ErlangInvocation.InvocationType expectedInvocationType) throws MuleException {
 
         final OutboundEndpoint outboundEndpoint = endpointFactory.getOutboundEndpoint(endpointName);
         assertEquals(expectedInvocationType, ErlangUtils.getInvocationType(outboundEndpoint));

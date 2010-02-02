@@ -12,6 +12,7 @@ package org.mule.transport.erlang.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
+import org.mule.transport.erlang.ErlangInvocation.InvocationType;
 
 public class ErlangMessages extends MessageFactory {
     private static final ErlangMessages MF = new ErlangMessages();
@@ -31,6 +32,10 @@ public class ErlangMessages extends MessageFactory {
 
     public static Message nullInvocationTypeEndpointProperty() {
         return MF.createMessage(BUNDLE_PATH, 3);
+    }
+
+    public static Message badResponseFormat(final InvocationType invocationType) {
+        return MF.createMessage(BUNDLE_PATH, 4, invocationType.toString());
     }
 
 }
