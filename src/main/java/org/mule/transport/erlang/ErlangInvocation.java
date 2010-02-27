@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
@@ -84,7 +85,11 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
 
             if (invocation.muleEvent.isSynchronous()) {
                 final OtpErlangObject result = invocation.senderMbox.receive(invocation.muleEvent.getTimeout());
-                // FIXME support failIfTimeout property
+
+                if (result == null && invocation.failIfTimeout) {
+                    throw new MessagingException(ErlangMessages.responseTimeOut(), invocation.muleEvent.getMessage());
+                }
+
                 return postProcess(invocation, result);
             }
 
@@ -105,14 +110,17 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
     private final OtpMbox senderMbox;
     private final String invocationTargetProcessName;
     private final InvocationType invocationType;
+    private final boolean failIfTimeout;
     private final MuleEvent muleEvent;
 
     public ErlangInvocation(final ErlangConnector connector, final OtpMbox senderMbox,
-            final String invocationTargetProcessName, final InvocationType invocationType, final MuleEvent muleEvent) {
+            final String invocationTargetProcessName, final InvocationType invocationType, final boolean failIfTimeout,
+            final MuleEvent muleEvent) {
         this.connector = connector;
         this.senderMbox = senderMbox;
         this.invocationTargetProcessName = invocationTargetProcessName;
         this.invocationType = invocationType;
+        this.failIfTimeout = failIfTimeout;
         this.muleEvent = muleEvent;
     }
 

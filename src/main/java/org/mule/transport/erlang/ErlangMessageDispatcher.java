@@ -30,9 +30,10 @@ import com.ericsson.otp.erlang.OtpMbox;
 public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     private final ErlangConnector connector;
+    private final InvocationType invocationType;
+    private final boolean failIfTimeout;
     private final String targetNodeName; // contains node or node@host
     private final String targetProcessName;
-    private final InvocationType invocationType;
 
     private OtpMbox otpMbox;
 
@@ -41,6 +42,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         connector = (ErlangConnector) endpoint.getConnector();
 
         invocationType = ErlangUtils.getInvocationType(endpoint);
+        failIfTimeout = ErlangUtils.isFailIfTimeout(endpoint);
 
         final EndpointURI endpointURI = endpoint.getEndpointURI();
         targetNodeName = ErlangUtils.getErlangNodeName(endpointURI);
@@ -81,7 +83,8 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         final String invocationTargetProcessName = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
                 targetProcessName);
 
-        return new ErlangInvocation(connector, otpMbox, invocationTargetProcessName, invocationType, event).call();
+        return new ErlangInvocation(connector, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout, event)
+                .call();
     }
 
     public OtpErlangPid getPid() {

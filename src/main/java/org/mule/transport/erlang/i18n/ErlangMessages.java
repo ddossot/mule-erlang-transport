@@ -38,4 +38,8 @@ public class ErlangMessages extends MessageFactory {
         return MF.createMessage(BUNDLE_PATH, 4, invocationType.toString());
     }
 
+    public static Message responseTimeOut() {
+        return MF.createMessage(BUNDLE_PATH, 5);
+    }
+
 }

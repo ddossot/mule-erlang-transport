@@ -35,6 +35,11 @@ public abstract class ErlangUtils {
         return ErlangInvocation.InvocationType.valueOf(invocationTypeProperty.toString());
     }
 
+    public static boolean isFailIfTimeout(final ImmutableEndpoint ie) {
+        final Object failIfTimeOut = ie.getProperty("failIfTimeout");
+        return failIfTimeOut == null ? false : Boolean.parseBoolean(failIfTimeOut.toString());
+    }
+
     public static OtpErlangTuple makeTuple(final OtpErlangObject... otpErlangObjects) {
         return new OtpErlangTuple(otpErlangObjects);
     }
