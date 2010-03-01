@@ -29,6 +29,7 @@
         <version>1.0-beta-2</version>
       </extension>
     </extensions>
+    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -39,7 +40,7 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-
+      
       <!-- Responsible for creating the release distribution for this project -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -98,7 +99,30 @@
       <id>it</id>
 
       <build>
+        <testResources>
+          <testResource><directory>src/test/resources</directory></testResource>
+          <testResource><directory>src/it/resources</directory></testResource>
+        </testResources>
         <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>add-test-source</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/it/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -111,6 +135,7 @@
                   <goal>exec</goal>
                 </goals>
                 <configuration>
+                  <workingDirectory>src/it/erlang</workingDirectory>
                   <executable>src/it/erlang/test_server.erl</executable>
                 </configuration>
               </execution>

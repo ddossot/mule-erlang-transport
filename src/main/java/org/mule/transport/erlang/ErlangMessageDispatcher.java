@@ -10,15 +10,18 @@
 
 package org.mule.transport.erlang;
 
+import org.apache.commons.lang.Validate;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.AbstractMessageDispatcher;
 import org.mule.transport.ConnectException;
 import org.mule.transport.erlang.ErlangInvocation.InvocationType;
 import org.mule.transport.erlang.i18n.ErlangMessages;
+import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangPid;
@@ -50,6 +53,14 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     }
 
     @Override
+    protected void doInitialise() throws InitialisationException {
+        // TODO i18n this
+        Validate.notEmpty(targetNodeName, "targetNodeName can't be empty");
+        Validate.notEmpty(targetProcessName, "targetProcessName can't be empty");
+        super.doInitialise();
+    }
+
+    @Override
     public void doConnect() throws Exception {
         otpMbox = connector.createMailBox();
 
@@ -75,7 +86,8 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     @Override
     public MuleMessage doSend(final MuleEvent event) throws Exception {
-        return new DefaultMuleMessage(doInvokeRemote(event), connector.getMuleContext());
+        final OtpErlangObject result = doInvokeRemote(event);
+        return new DefaultMuleMessage(ErlangConversionUtils.erlangToJava(result), connector.getMuleContext());
     }
 
     private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception {

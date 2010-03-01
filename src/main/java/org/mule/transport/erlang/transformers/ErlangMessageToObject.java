@@ -17,9 +17,9 @@ import org.mule.transformer.AbstractMessageAwareTransformer;
 import com.ericsson.otp.erlang.OtpErlangObject;
 
 /**
- * <code>ErlangMessageToObject</code> converts an OtpErlangObject to a Java
- * Object.
+ * <code>ErlangMessageToObject</code> converts an OtpErlangObject to a Java Object.
  */
+@SuppressWarnings("unchecked")
 public class ErlangMessageToObject extends AbstractMessageAwareTransformer {
 
     public ErlangMessageToObject() {

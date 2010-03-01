@@ -50,8 +50,8 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
         GS_CALL {
             @Override
             OtpErlangObject preProcess(final ErlangInvocation invocation, final OtpErlangObject payload) {
-                return ErlangUtils.makeTuple(new OtpErlangAtom("gen_call"), ErlangUtils.makeTuple(invocation.senderMbox.self(),
-                        invocation.connector.createRef()), payload);
+                return ErlangUtils.makeTuple(new OtpErlangAtom("$gen_call"), ErlangUtils.makeTuple(
+                        invocation.senderMbox.self(), invocation.connector.createRef()), payload);
             }
 
             @Override
@@ -81,16 +81,20 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
         OtpErlangObject process(final ErlangInvocation invocation) throws Exception {
             final OtpErlangObject payload = (OtpErlangObject) invocation.muleEvent.transformMessage();
             final OtpErlangObject preProcessedPayload = preProcess(invocation, payload);
-            invocation.senderMbox.send(invocation.invocationTargetProcessName, preProcessedPayload);
+            // FIXME take node name from endpoint
+            invocation.senderMbox.send(invocation.invocationTargetProcessName, "mule_test_server_node@ddossot-laptop",
+                    preProcessedPayload);
 
             if (invocation.muleEvent.isSynchronous()) {
                 final OtpErlangObject result = invocation.senderMbox.receive(invocation.muleEvent.getTimeout());
 
-                if (result == null && invocation.failIfTimeout) {
-                    throw new MessagingException(ErlangMessages.responseTimeOut(), invocation.muleEvent.getMessage());
+                if (result != null) {
+                    return postProcess(invocation, result);
                 }
 
-                return postProcess(invocation, result);
+                if (invocation.failIfTimeout) {
+                    throw new MessagingException(ErlangMessages.responseTimeOut(), invocation.muleEvent.getMessage());
+                }
             }
 
             return null;

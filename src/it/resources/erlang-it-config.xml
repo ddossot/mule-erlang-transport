@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:erlang="http://www.mulesoft.org/schema/mule/erlang"
+  xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+  xsi:schemaLocation="
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/erlang http://www.mulesoft.org/schema/mule/erlang/3.0/mule-erlang.xsd
+       http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+  <erlang:connector name="ErlangConnector" nodeName="MuleIT" cookie="mule_test_cookie" />
+
+  <model>
+  
+    <service name="GenServerCallTest">
+      <inbound>
+        <vm:inbound-endpoint path="DispatchTest.IN" synchronous="true" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint nodeName="mule_test_server_node@ddossot-laptop"
+                                    processName="mule_test_gen_server"
+                                    invocationType="GS_CALL"
+                                    failIfTimeout="true"
+                                    synchronous="true" />
+        </pass-through-router>
+      </outbound>
+    </service>
+  
+  </model>
+</mule>

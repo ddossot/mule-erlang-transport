@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
-
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangBoolean;
 import com.ericsson.otp.erlang.OtpErlangByte;
@@ -45,7 +43,9 @@ public abstract class ErlangConversionUtils {
      * http://www.eclipse.org/legal/epl-v10.html
      */
     public static OtpErlangObject javaToErlang(final Object obj) throws IllegalArgumentException {
-        Validate.notNull(obj, "Can't transform null objects");
+        if (obj == null) {
+            return null;
+        }
 
         if (obj instanceof OtpErlangObject) {
             return (OtpErlangObject) obj;
@@ -102,7 +102,9 @@ public abstract class ErlangConversionUtils {
     }
 
     public static Object erlangToJava(final OtpErlangObject erl) throws IllegalArgumentException {
-        Validate.notNull(erl, "Can't transform null objects");
+        if (erl == null) {
+            return null;
+        }
 
         try {
             if (erl instanceof OtpErlangString) {

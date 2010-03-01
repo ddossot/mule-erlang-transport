@@ -10,7 +10,7 @@ handle_call(Msg, _From, State) -> {reply, {ack, Msg, State}, undefined}.
 %% set state to inbound message
 handle_cast(Msg, _State) -> {noreply, Msg}.
 
-handle_info(_Info, State) -> {noreply, State}.
+handle_info(Info, State) -> io:format("ignoring: ~p~n", [Info]), {noreply, State}.
 
 terminate(_Reason, _State) -> ok.
 
