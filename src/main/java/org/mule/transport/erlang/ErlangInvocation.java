@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
@@ -74,7 +75,7 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
             }
         },
 
-        // {'$gen_cast',hello}
+        // {'$gen_cast',Msg}
         GS_CAST {
             @Override
             OtpErlangObject preProcess(final ErlangInvocation invocation, final OtpErlangObject payload) {
@@ -90,10 +91,10 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
 
         OtpErlangObject process(final ErlangInvocation invocation) throws Exception {
             final OtpErlangObject payload = (OtpErlangObject) invocation.muleEvent.transformMessage();
+
             final OtpErlangObject preProcessedPayload = preProcess(invocation, payload);
-            // FIXME take node name from endpoint
-            invocation.senderMbox.send(invocation.invocationTargetProcessName, "mule_test_server_node@ddossot-laptop",
-                    preProcessedPayload);
+
+            invocation.senderMbox.send(invocation.invocationTargetProcessName, invocation.erlangNodeName, preProcessedPayload);
 
             if (invocation.muleEvent.isSynchronous()) {
                 return getResponse(invocation);
@@ -128,22 +129,27 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
 
     };
 
+    // TODO replace with a builder
+    private final MuleEvent muleEvent;
     private final ErlangConnector connector;
+    private final String erlangNodeName;
     private final OtpMbox senderMbox;
     private final String invocationTargetProcessName;
     private final InvocationType invocationType;
     private final boolean failIfTimeout;
-    private final MuleEvent muleEvent;
 
-    public ErlangInvocation(final ErlangConnector connector, final OtpMbox senderMbox,
-            final String invocationTargetProcessName, final InvocationType invocationType, final boolean failIfTimeout,
-            final MuleEvent muleEvent) {
-        this.connector = connector;
+    public ErlangInvocation(final MuleEvent muleEvent, final OtpMbox senderMbox, final String invocationTargetProcessName,
+            final InvocationType invocationType, final boolean failIfTimeout) {
+
+        this.muleEvent = muleEvent;
+        final ImmutableEndpoint endpoint = muleEvent.getEndpoint();
+        connector = (ErlangConnector) endpoint.getConnector();
+        erlangNodeName = ErlangUtils.getErlangNodeName(endpoint.getEndpointURI());
+
         this.senderMbox = senderMbox;
         this.invocationTargetProcessName = invocationTargetProcessName;
         this.invocationType = invocationType;
         this.failIfTimeout = failIfTimeout;
-        this.muleEvent = muleEvent;
     }
 
     public OtpErlangObject call() throws Exception {

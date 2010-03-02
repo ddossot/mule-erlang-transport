@@ -5,12 +5,12 @@
 init([]) ->  {ok, undefined}.
 
 %% return inbound message and current state - reset state
-handle_call(Msg, _From, State) -> {reply, {ack, Msg, State}, undefined}.
+handle_call(Msg, _From, State) -> io:format("gen_call: ~p~n", [Msg]), {reply, {ack, Msg, State}, undefined}.
 
 %% set state to inbound message
-handle_cast(Msg, _State) -> {noreply, Msg}.
+handle_cast(Msg, _State) -> io:format("gen_cast: ~p~n", [Msg]), {noreply, Msg}.
 
-handle_info(Info, State) -> io:format("ignoring: ~p~n", [Info]), {noreply, State}.
+handle_info(Info, State) -> io:format("gen_info: ~p~n", [Info]), {noreply, State}.
 
 terminate(_Reason, _State) -> ok.
 

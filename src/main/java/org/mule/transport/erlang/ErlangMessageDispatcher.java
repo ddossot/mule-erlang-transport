@@ -94,8 +94,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         final String invocationTargetProcessName = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
                 targetProcessName);
 
-        return new ErlangInvocation(connector, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout, event)
-                .call();
+        return new ErlangInvocation(event, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout).call();
     }
 
     public OtpErlangPid getPid() {

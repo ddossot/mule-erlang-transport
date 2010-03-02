@@ -12,13 +12,27 @@
 
   <model>
   
-    <service name="GenServerCallTest">
+    <service name="GenServerCastTest">
       <inbound>
-        <vm:inbound-endpoint path="DispatchTest.IN" synchronous="true" />
+        <vm:inbound-endpoint path="GenServerCastTest.IN" synchronous="true" />
       </inbound>
       <outbound>
         <pass-through-router>
-          <erlang:outbound-endpoint nodeName="mule_test_server_node@ddossot-laptop"
+          <erlang:outbound-endpoint nodeName="mule_test_server_node@${host.name}"
+                                    processName="mule_test_gen_server"
+                                    invocationType="GS_CAST"
+                                    synchronous="true" />
+        </pass-through-router>
+      </outbound>
+    </service>
+  
+    <service name="GenServerCallTest">
+      <inbound>
+        <vm:inbound-endpoint path="GenServerCallTest.IN" synchronous="true" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint nodeName="mule_test_server_node@${host.name}"
                                     processName="mule_test_gen_server"
                                     invocationType="GS_CALL"
                                     failIfTimeout="true"
