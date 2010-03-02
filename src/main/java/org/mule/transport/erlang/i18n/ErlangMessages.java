@@ -30,8 +30,8 @@ public class ErlangMessages extends MessageFactory {
         return MF.createMessage(BUNDLE_PATH, 2, nodeName);
     }
 
-    public static Message nullInvocationTypeEndpointProperty() {
-        return MF.createMessage(BUNDLE_PATH, 3);
+    public static Message missingEndpointProperty(final String propertyName) {
+        return MF.createMessage(BUNDLE_PATH, 3, propertyName);
     }
 
     public static Message badResponseFormat(final InvocationType invocationType) {

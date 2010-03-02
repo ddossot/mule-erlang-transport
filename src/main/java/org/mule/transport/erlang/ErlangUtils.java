@@ -31,7 +31,7 @@ public abstract class ErlangUtils {
 
     public static ErlangInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {
         final Object invocationTypeProperty = ie.getProperty("invocationType");
-        Validate.notNull(invocationTypeProperty, ErlangMessages.nullInvocationTypeEndpointProperty().getMessage());
+        Validate.notNull(invocationTypeProperty, ErlangMessages.missingEndpointProperty("invocationType").getMessage());
         return ErlangInvocation.InvocationType.valueOf(invocationTypeProperty.toString());
     }
 

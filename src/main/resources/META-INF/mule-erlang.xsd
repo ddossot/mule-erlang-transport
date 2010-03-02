@@ -137,8 +137,20 @@
 
 
   <!-- Transformers -->
-  <xsd:element name="erlang-message-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer" />
+  <xsd:element name="object-erlang-message-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+      <xsd:annotation>
+          <xsd:documentation>
+              The object-erlang-message-transformer element configures a transformer that converts a Java object into an Erlang message. 
+          </xsd:documentation>
+      </xsd:annotation>
+  </xsd:element>
 
-  <xsd:element name="object-erlang-message-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer" />
+  <xsd:element name="erlang-message-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+      <xsd:annotation>
+          <xsd:documentation>
+              The erlang-message-to-object-transformer element configures a transformer that converts an Erlang message into a Java object. 
+          </xsd:documentation>
+      </xsd:annotation>
+  </xsd:element>
 
 </xsd:schema>

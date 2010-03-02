@@ -9,6 +9,8 @@ import org.mule.api.MuleEvent;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangDecodeException;
+import com.ericsson.otp.erlang.OtpErlangExit;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 import com.ericsson.otp.erlang.OtpMbox;
@@ -16,6 +18,8 @@ import com.ericsson.otp.erlang.OtpMbox;
 public class ErlangInvocation implements Callable<OtpErlangObject> {
 
     private static final Log LOGGER = LogFactory.getLog(ErlangInvocation.class);
+
+    private static final OtpErlangAtom OK_ATOM = new OtpErlangAtom("ok");
 
     public static enum InvocationType {
         // Msg
@@ -76,6 +80,12 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
             OtpErlangObject preProcess(final ErlangInvocation invocation, final OtpErlangObject payload) {
                 return ErlangUtils.makeTuple(new OtpErlangAtom("$gen_cast"), payload);
             }
+
+            @Override
+            OtpErlangObject getResponse(final ErlangInvocation arg0) throws OtpErlangExit, OtpErlangDecodeException,
+                    MessagingException {
+                return OK_ATOM;
+            }
         };
 
         OtpErlangObject process(final ErlangInvocation invocation) throws Exception {
@@ -86,15 +96,23 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
                     preProcessedPayload);
 
             if (invocation.muleEvent.isSynchronous()) {
-                final OtpErlangObject result = invocation.senderMbox.receive(invocation.muleEvent.getTimeout());
+                return getResponse(invocation);
+            }
 
-                if (result != null) {
-                    return postProcess(invocation, result);
-                }
+            return null;
+        }
 
-                if (invocation.failIfTimeout) {
-                    throw new MessagingException(ErlangMessages.responseTimeOut(), invocation.muleEvent.getMessage());
-                }
+        OtpErlangObject getResponse(final ErlangInvocation invocation) throws OtpErlangExit, OtpErlangDecodeException,
+                MessagingException {
+
+            final OtpErlangObject result = invocation.senderMbox.receive(invocation.muleEvent.getTimeout());
+
+            if (result != null) {
+                return postProcess(invocation, result);
+            }
+
+            if (invocation.failIfTimeout) {
+                throw new MessagingException(ErlangMessages.responseTimeOut(), invocation.muleEvent.getMessage());
             }
 
             return null;

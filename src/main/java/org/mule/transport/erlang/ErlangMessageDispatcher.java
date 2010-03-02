@@ -54,9 +54,8 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     @Override
     protected void doInitialise() throws InitialisationException {
-        // TODO i18n this
-        Validate.notEmpty(targetNodeName, "targetNodeName can't be empty");
-        Validate.notEmpty(targetProcessName, "targetProcessName can't be empty");
+        Validate.notEmpty(targetNodeName, ErlangMessages.missingEndpointProperty("targetNodeName").getMessage());
+        Validate.notEmpty(targetProcessName, ErlangMessages.missingEndpointProperty("targetProcessName").getMessage());
         super.doInitialise();
     }
 
