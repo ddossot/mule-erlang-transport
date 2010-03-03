@@ -18,6 +18,8 @@
       </inbound>
       <outbound>
         <pass-through-router>
+          <!-- synchronous dispatch with gs_cast is nonsensical, as only null will come back
+               it's done here only for testing purposes -->
           <erlang:outbound-endpoint nodeName="mule_test_server_node@${host.name}"
                                     processName="mule_test_gen_server"
                                     invocationType="GS_CAST"

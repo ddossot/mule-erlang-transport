@@ -8,6 +8,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.NullPayload;
 
 public class ErlangTransportITCase extends FunctionalTestCase {
 
@@ -39,7 +40,7 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         final Long testPayload = RandomUtils.nextLong();
 
         final MuleMessage result = muleClient.send("vm://GenServerCastTest.IN", testPayload, null);
-        assertEquals("ok", result.getPayloadAsString());
+        assertEquals(NullPayload.getInstance(), result.getPayload());
         return testPayload;
     }
 
