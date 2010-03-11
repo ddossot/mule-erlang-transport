@@ -31,7 +31,38 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         return "erlang-it-config.xml";
     }
 
-    public void testGenServerCastAndCallTest() throws Exception {
+    public void testRawAndPidWrapped() throws Exception {
+        final Object expectedState = doRaw();
+
+        // this hacky sleep lives time for raw message to hit erlang server
+        // TODO replace this with a loop back when inbound will be supported
+        Thread.sleep(1000L);
+
+        doPidWrapped(expectedState);
+    }
+
+    private Object doRaw() throws Exception {
+        final Long testPayload = RandomUtils.nextLong();
+
+        muleClient.dispatch("vm://RawTest.IN", testPayload, null);
+        return testPayload;
+    }
+
+    private void doPidWrapped(final Object expectedState) throws Exception {
+        final String testPayload = RandomStringUtils.randomAlphanumeric(20);
+
+        final MuleMessage result = muleClient.send("vm://PidWrapped.IN", testPayload, null);
+
+        final Object payload = result.getPayload();
+        assertTrue(payload.getClass().isArray());
+
+        final Object[] responseArray = (Object[]) payload;
+        assertEquals("raw_ack", responseArray[0]);
+        assertEquals(testPayload, responseArray[1]);
+        assertEquals(expectedState, responseArray[2]);
+    }
+
+    public void testGenServerCastAndCall() throws Exception {
         final Object expectedState = doGenServerCast();
         doGenServerCall(expectedState);
     }
@@ -53,7 +84,7 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         assertTrue(payload.getClass().isArray());
 
         final Object[] responseArray = (Object[]) payload;
-        assertEquals("ack", responseArray[0]);
+        assertEquals("gs_ack", responseArray[0]);
         assertEquals(testPayload, responseArray[1]);
         assertEquals(expectedState, responseArray[2]);
     }

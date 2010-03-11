@@ -29,7 +29,7 @@ import com.ericsson.otp.erlang.OtpErlangTuple;
  */
 public abstract class ErlangConversionUtils {
 
-    // FIXME add support for Map <-> PropList, stream/byte[] <-> Binary conversions
+    // TODO add support for Map <-> PropList, stream/byte[] <-> Binary conversions
 
     private ErlangConversionUtils() {
         throw new UnsupportedOperationException("do not instantiate");

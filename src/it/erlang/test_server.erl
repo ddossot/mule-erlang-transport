@@ -6,12 +6,12 @@ main(_) ->
   gen_server:start_link({local, mule_test_gen_server}, test_gen_server, [], []),
   register(mule_test_server, self()),
   io:format("test_server started~n"),
-  loop().
+  loop(undefined).
 
-loop() ->
+loop(State) ->
   receive
     {Pid, stop} -> io:format("stopping test_server~n"), unregister(mule_test_server), Pid ! stopped;
-    {Pid, Msg} -> io:format("replying to: ~p~n", [Pid]), Pid ! {self(), {ack, Msg}}, loop();
-    Other -> io:format("ignoring: ~p~n", [Other]), loop()
+    {Pid, Msg} -> io:format("replying to: ~p~n", [Pid]), Pid ! {self(), {raw_ack, Msg, State}}, loop(undefined);
+    Other -> io:format("new state: ~p~n", [Other]), loop(Other)
   end.
 

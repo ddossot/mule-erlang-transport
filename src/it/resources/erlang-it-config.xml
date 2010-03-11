@@ -11,7 +11,33 @@
   <erlang:connector name="ErlangConnector" nodeName="MuleIT" cookie="mule_test_cookie" />
 
   <model>
-  
+    <service name="RawTest">
+      <inbound>
+        <vm:inbound-endpoint path="RawTest.IN" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint nodeName="mule_test_server_node@${host.name}"
+                                    processName="mule_test_server"
+                                    invocationType="RAW" />
+        </pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="PidWrappedTest">
+      <inbound>
+        <vm:inbound-endpoint path="PidWrapped.IN" synchronous="true" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint nodeName="mule_test_server_node@${host.name}"
+                                    processName="mule_test_server"
+                                    invocationType="PID_WRAPPED"
+                                    synchronous="true" />
+        </pass-through-router>
+      </outbound>
+    </service>
+
     <service name="GenServerCastTest">
       <inbound>
         <vm:inbound-endpoint path="GenServerCastTest.IN" synchronous="true" />
@@ -27,7 +53,7 @@
         </pass-through-router>
       </outbound>
     </service>
-  
+
     <service name="GenServerCallTest">
       <inbound>
         <vm:inbound-endpoint path="GenServerCallTest.IN" synchronous="true" />

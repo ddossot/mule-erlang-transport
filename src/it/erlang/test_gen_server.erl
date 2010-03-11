@@ -5,7 +5,7 @@
 init([]) ->  {ok, undefined}.
 
 %% return inbound message and current state - reset state
-handle_call(Msg, _From, State) -> io:format("gen_call: ~p~n", [Msg]), {reply, {ack, Msg, State}, undefined}.
+handle_call(Msg, _From, State) -> io:format("gen_call: ~p~n", [Msg]), {reply, {gs_ack, Msg, State}, undefined}.
 
 %% set state to inbound message
 handle_cast(Msg, _State) -> io:format("gen_cast: ~p~n", [Msg]), {noreply, Msg}.
