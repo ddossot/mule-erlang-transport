@@ -29,7 +29,7 @@
         <version>1.0-beta-2</version>
       </extension>
     </extensions>
-    
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -40,7 +40,7 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-      
+
       <!-- Responsible for creating the release distribution for this project -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -406,6 +406,15 @@
       <url>http://dist.muleforge.org/erlang/dependencies/maven2</url>
       <snapshots>
         <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>codehaus-snaps-repo</id>
+      <name>Codehaus Snapshots Repository</name>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
   </repositories>
