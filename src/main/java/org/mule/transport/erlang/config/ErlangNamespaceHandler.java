@@ -27,8 +27,8 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
         // TODO add required attributes here and in schema based on how the
         // receiver and requester will evolve
         registerStandardTransportEndpoints(ErlangConnector.ERLANG,
-                new String[] { ErlangProperties.NODE_NAME_PROPERTY, ErlangProperties.PROCESS_NAME_PROPERTY }).addAlias(
-                ErlangProperties.PROCESS_NAME_PROPERTY, URIBuilder.PATH).addAlias(ErlangProperties.NODE_NAME_PROPERTY,
+                new String[] { ErlangProperties.NODE_PROPERTY, ErlangProperties.PROCESS_NAME_PROPERTY }).addAlias(
+                ErlangProperties.PROCESS_NAME_PROPERTY, URIBuilder.PATH).addAlias(ErlangProperties.NODE_PROPERTY,
                 URIBuilder.HOST);
 
         registerConnectorDefinitionParser(ErlangConnector.class);
