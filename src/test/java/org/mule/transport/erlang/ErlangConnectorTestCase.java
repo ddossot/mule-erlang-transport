@@ -23,7 +23,7 @@ public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
 
     @Override
     public Connector createConnector() throws Exception {
-        final ErlangConnector c = new ErlangConnector();
+        final ErlangConnector c = new ErlangConnector(muleContext);
         c.setName("Test");
         c.setNodeName("TestErlangNode");
         c.setCookie("TestCookie");

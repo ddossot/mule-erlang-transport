@@ -11,6 +11,7 @@
 package org.mule.transport.erlang;
 
 import org.apache.commons.lang.Validate;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.ConnectorException;
@@ -22,7 +23,7 @@ import com.ericsson.otp.erlang.OtpMbox;
 import com.ericsson.otp.erlang.OtpNode;
 
 /**
- * <code>ErlangConnector</code> TODO document
+ * The <code>ErlangConnector</code> supports sending to and receiving from Erlang nodes.
  */
 public class ErlangConnector extends AbstractConnector {
     /* This constant defines the main transport protocol identifier */
@@ -36,6 +37,10 @@ public class ErlangConnector extends AbstractConnector {
     // TODO add an option for attempting to start EPMD if not running
 
     private OtpNode otpNode;
+
+    public ErlangConnector(final MuleContext context) {
+        super(context);
+    }
 
     @Override
     protected void doInitialise() throws InitialisationException {
