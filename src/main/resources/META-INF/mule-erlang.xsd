@@ -93,14 +93,14 @@
       <xsd:annotation>
         <xsd:documentation>
           An Erlang process name.
-                </xsd:documentation>
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="node" type="xsd:string">
+    <xsd:attribute name="node" type="xsd:string" default="connector.nodeName">
       <xsd:annotation>
         <xsd:documentation>
           An Erlang node descriptor (typically: nodeName@nodeHost).
-                </xsd:documentation>
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:attributeGroup>

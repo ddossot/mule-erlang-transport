@@ -18,8 +18,7 @@ import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
 /**
- * Registers a Bean Definition Parser for handling
- * <code><erlang:connector></code> elements and supporting endpoint elements.
+ * Registers a Bean Definition Parser for handling <code><erlang:connector></code> elements and supporting endpoint elements.
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 

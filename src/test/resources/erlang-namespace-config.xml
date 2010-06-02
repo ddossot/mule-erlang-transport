@@ -16,4 +16,17 @@
   <erlang:endpoint name="erlangEndpoint3" node="remoteNode3@hostName" processName="process3" invocationType="GS_CALL"
     connector-ref="erlangConnector1" failIfTimeout="true" />
 
+  <model name="unit-tests">
+    <service name="test">
+      <inbound>
+        <erlang:inbound-endpoint name="erlin" processName="test" connector-ref="erlangConnector1" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint name="erlout" node="remoteNode4@hostName" processName="process4"
+            connector-ref="erlangConnector2" />
+        </pass-through-router>
+      </outbound>
+    </service>
+  </model>
 </mule>

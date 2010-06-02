@@ -105,8 +105,9 @@ public class ErlangMessageReceiver extends AbstractPollingMessageReceiver {
 
     @Override
     public void poll() throws Exception {
-        // FIXME call routeMessage, if a non-null response is received try to send it back to Erlang
-        // add properties: erlang.invocationType(raw,pidwrapped...),erlang.ref,erlang.remotePid
+        // add properties: erlang.invocationType(RAW,PID_WRAPPED,GS_CALL,GS_CAST),erlang.ref,erlang.remotePid
+        // use workers to do the dispatching
+        // FIXME call routeMessage and if a non-null response is received try to send it back to Erlang
     }
 
 }

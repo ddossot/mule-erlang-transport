@@ -13,6 +13,7 @@ import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
@@ -65,6 +66,16 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
                 ErlangInvocation.InvocationType.GS_CALL, true);
     }
 
+    public void testEndpointsInService() throws Exception {
+        assertEquals("erlang://connector.nodeName/test", muleContext.getRegistry().lookupService("test").getInboundRouter()
+                .getEndpoint("erlin").getEndpointURI().toString());
+
+        final OutboundPassThroughRouter optr = (OutboundPassThroughRouter) muleContext.getRegistry().lookupService("test")
+                .getOutboundRouter().getRouters().get(0);
+
+        assertEquals("erlang://remoteNode4@hostName/process4", optr.getEndpoint("erlout").getEndpointURI().toString());
+    }
+
     private void testEndpointConfiguration(final EndpointFactory endpointFactory, final String endpointName,
             final String expectedErlangNodeName, final String exectedProcessName,
             final ErlangInvocation.InvocationType expectedInvocationType, final boolean expectedIsFailIfTimeout)
@@ -78,4 +89,5 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
         assertEquals(expectedErlangNodeName, ErlangUtils.getErlangNodeName(endpointURI));
         assertEquals(exectedProcessName, ErlangUtils.getProcessName(endpointURI));
     }
+
 }
