@@ -12,7 +12,7 @@
   <url>http://www.muleforge.org/projects/${shortId}</url>
 
   <properties>
-    <mule.version>3.0.0-M3-SNAPSHOT</mule.version>
+    <mule.version>3.0.0-M4-SNAPSHOT</mule.version>
     <jinterface.version>1.5.1</jinterface.version>
     <!-- Tools properties -->
     <eclipsePluginVersion>2.5</eclipsePluginVersion>
