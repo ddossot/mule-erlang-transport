@@ -9,7 +9,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
-import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 import com.ericsson.otp.erlang.OtpMbox;
@@ -17,10 +16,6 @@ import com.ericsson.otp.erlang.OtpMbox;
 public class ErlangInvocation implements Callable<OtpErlangObject> {
 
     private static final Log LOGGER = LogFactory.getLog(ErlangInvocation.class);
-
-    private static final OtpErlangAtom GS_CAST_SIGNATURE = new OtpErlangAtom("$gen_cast");
-
-    private static final OtpErlangAtom GEN_CALL_SIGNATURE = new OtpErlangAtom("$gen_call");
 
     public static enum InvocationType {
         // Msg
@@ -55,7 +50,7 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
         GS_CALL {
             @Override
             OtpErlangObject preProcess(final ErlangInvocation invocation, final OtpErlangObject payload) {
-                return ErlangUtils.makeTuple(GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(invocation.senderMbox.self(),
+                return ErlangUtils.makeTuple(ErlangUtils.GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(invocation.senderMbox.self(),
                         invocation.connector.createRef()), payload);
             }
 
@@ -84,7 +79,7 @@ public class ErlangInvocation implements Callable<OtpErlangObject> {
         GS_CAST {
             @Override
             OtpErlangObject preProcess(final ErlangInvocation invocation, final OtpErlangObject payload) {
-                return ErlangUtils.makeTuple(GS_CAST_SIGNATURE, payload);
+                return ErlangUtils.makeTuple(ErlangUtils.GS_CAST_SIGNATURE, payload);
             }
 
             @Override

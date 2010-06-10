@@ -6,10 +6,14 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
+import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 
 public abstract class ErlangUtils {
+    public static final OtpErlangAtom GS_CAST_SIGNATURE = new OtpErlangAtom("$gen_cast");
+    public static final OtpErlangAtom GEN_CALL_SIGNATURE = new OtpErlangAtom("$gen_call");
+
     private ErlangUtils() {
         throw new UnsupportedOperationException("do not instantiate");
     }

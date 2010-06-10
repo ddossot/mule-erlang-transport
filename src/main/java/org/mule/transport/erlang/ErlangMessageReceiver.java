@@ -11,33 +11,35 @@
 package org.mule.transport.erlang;
 
 import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.StartException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
-import org.mule.transport.AbstractPollingMessageReceiver;
+import org.mule.transport.AbstractMessageReceiver;
 import org.mule.transport.ConnectException;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
-import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangException;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangPid;
-import com.ericsson.otp.erlang.OtpErlangRef;
-import com.ericsson.otp.erlang.OtpErlangTuple;
 import com.ericsson.otp.erlang.OtpMbox;
 
 /**
- * <code>ErlangMessageReceiver</code> TODO document
+ * The <code>ErlangMessageReceiver</code> creates a single worker listening to an OtpMbox (which can only be consumed by a
+ * single thread) but delegates the routing of incoming messages to workers.
  */
-public class ErlangMessageReceiver extends AbstractPollingMessageReceiver {
+public class ErlangMessageReceiver extends AbstractMessageReceiver {
+
+    private static final long MBOX_RECEIVE_TIMEOUT = 1000L;
 
     private final ErlangConnector connector;
     private OtpMbox otpMbox;
+    private ErlangMessageReceiverWorker erlangMessageReceiverWorker;
 
     public ErlangMessageReceiver(final Connector connector, final Service service, final InboundEndpoint endpoint)
             throws CreateException {
@@ -55,6 +57,22 @@ public class ErlangMessageReceiver extends AbstractPollingMessageReceiver {
     }
 
     @Override
+    protected void doStart() throws MuleException {
+        erlangMessageReceiverWorker = new ErlangMessageReceiverWorker();
+
+        try {
+            getWorkManager().scheduleWork(erlangMessageReceiverWorker, WorkManager.INDEFINITE, null, null);
+        } catch (final WorkException we) {
+            throw new StartException(we, this);
+        }
+    }
+
+    @Override
+    protected void doStop() throws MuleException {
+        erlangMessageReceiverWorker.release();
+    }
+
+    @Override
     public void doDisconnect() throws ConnectException {
         otpMbox.registerName(null);
         otpMbox.close();
@@ -65,62 +83,32 @@ public class ErlangMessageReceiver extends AbstractPollingMessageReceiver {
         otpMbox = null;
     }
 
-    @Override
-    public void poll() throws Exception {
-        final OtpErlangObject oeo = otpMbox.receive(getFrequency() / 2);
-
-        if (oeo != null) {
-            getWorkManager().scheduleWork(new ErlangMessageReceiverWorker(oeo), WorkManager.INDEFINITE, null, null);
-        }
+    public void respondToErlangProcess(final OtpErlangPid pid, final OtpErlangObject message) {
+        otpMbox.send(pid, message);
     }
 
     private final class ErlangMessageReceiverWorker implements Work {
+        private volatile boolean running = true;
 
-        private final OtpErlangObject oeo;
+        public void run() {
+            while (running) {
+                try {
+                    final OtpErlangObject oeo = otpMbox.receive(MBOX_RECEIVE_TIMEOUT);
 
-        public ErlangMessageReceiverWorker(final OtpErlangObject oeo) {
-            this.oeo = oeo;
+                    if (oeo != null) {
+                        getWorkManager().scheduleWork(new ErlangMessageRouterWorker(ErlangMessageReceiver.this, oeo),
+                                WorkManager.INDEFINITE, null, null);
+                    }
+                } catch (final WorkException we) {
+                    handleException(we);
+                } catch (final OtpErlangException oee) {
+                    handleException(oee);
+                }
+            }
         }
 
         public void release() {
-            // noop
-        }
-
-        public void run() {
-            try {
-                OtpErlangObject dispatchedPayload = oeo;
-
-                // FIXME this code must go elsewhere
-                if (oeo instanceof OtpErlangTuple) {
-                    final OtpErlangTuple oet = (OtpErlangTuple) oeo;
-                    if (oet.arity() == 3 && oet.elementAt(0).equals(new OtpErlangAtom("$gen_call"))) {
-                        dispatchedPayload = oet.elementAt(2);
-                    }
-                }
-
-                // FIXME add properties: erlang.invocationType(RAW,PID_WRAPPED,GS_CALL,GS_CAST),erlang.ref,erlang.remotePid
-                final MuleMessage result = routeMessage(new DefaultMuleMessage(dispatchedPayload, connector.getMuleContext()));
-
-                if (result != null && result.getPayload() instanceof OtpErlangObject) {
-                    // FIXME respond to caller if possible - if result is present but can't send response back to Erlang -->
-                    // WARN!
-
-                    // FIXME this code must go elsewhere
-                    if (oeo instanceof OtpErlangTuple) {
-                        final OtpErlangTuple oet = (OtpErlangTuple) oeo;
-                        if (oet.arity() == 3 && oet.elementAt(0).equals(new OtpErlangAtom("$gen_call"))) {
-                            final OtpErlangTuple callPidAndRef = (OtpErlangTuple) oet.elementAt(1);
-                            final OtpErlangPid callPid = (OtpErlangPid) callPidAndRef.elementAt(0);
-                            final OtpErlangRef callRef = (OtpErlangRef) callPidAndRef.elementAt(1);
-
-                            otpMbox.send(callPid, ErlangUtils.makeTuple(callRef, (OtpErlangObject) result.getPayload()));
-                        }
-                    }
-                }
-
-            } catch (final MuleException me) {
-                connector.handleException(me);
-            }
+            running = false;
         }
     }
 
