@@ -17,13 +17,13 @@
     connector-ref="erlangConnector1" failIfTimeout="true" />
 
   <model name="unit-tests">
-    <service name="test">
+    <service name="test-service">
       <inbound>
-        <erlang:inbound-endpoint name="erlin" processName="test" connector-ref="erlangConnector1" />
+        <erlang:inbound-endpoint name="erlin" processName="process4" connector-ref="erlangConnector1" />
       </inbound>
       <outbound>
         <pass-through-router>
-          <erlang:outbound-endpoint name="erlout" node="remoteNode4@hostName" processName="process4"
+          <erlang:outbound-endpoint name="erlout" node="remoteNode4@hostName" processName="process5"
             connector-ref="erlangConnector2" />
         </pass-through-router>
       </outbound>

@@ -41,6 +41,8 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         doPidWrapped(expectedState);
     }
 
+    // FIXME add test for inbound and fix above hack
+
     private Object doRaw() throws Exception {
         final Long testPayload = RandomUtils.nextLong();
 

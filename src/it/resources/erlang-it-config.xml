@@ -68,6 +68,19 @@
         </pass-through-router>
       </outbound>
     </service>
+
+    <service name="ErlangInOutService">
+      <inbound>
+        <erlang:inbound-endpoint processName="capitalizer"
+                                 synchronous="true" />
+      </inbound>
+      <component>
+        <method-entry-point-resolver>
+            <include-entry-point method="capitalizeFully"/>
+        </method-entry-point-resolver>
+        <singleton-object class="org.apache.commons.lang.WordUtils" />
+      </component>    
+    </service>
   
   </model>
 </mule>

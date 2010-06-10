@@ -42,4 +42,8 @@ public class ErlangMessages extends MessageFactory {
         return MF.createMessage(BUNDLE_PATH, 5);
     }
 
+    public static Message mailboxNameRegistrationFailed(final String name) {
+        return MF.createMessage(BUNDLE_PATH, 6, name);
+    }
+
 }

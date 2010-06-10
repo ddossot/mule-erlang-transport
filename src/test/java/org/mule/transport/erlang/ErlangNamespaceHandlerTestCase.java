@@ -13,6 +13,7 @@ import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.service.Service;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
@@ -67,13 +68,16 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
     }
 
     public void testEndpointsInService() throws Exception {
-        assertEquals("erlang://connector.nodeName/test", muleContext.getRegistry().lookupService("test").getInboundRouter()
-                .getEndpoint("erlin").getEndpointURI().toString());
+        final Service testService = muleContext.getRegistry().lookupService("test-service");
+        final EndpointURI inboundEndpointURI = testService.getInboundRouter().getEndpoint("erlin").getEndpointURI();
+        assertEquals("erlang://connector.nodeName/process4", inboundEndpointURI.toString());
+        assertEquals("process4", ErlangUtils.getProcessName(inboundEndpointURI));
 
-        final OutboundPassThroughRouter optr = (OutboundPassThroughRouter) muleContext.getRegistry().lookupService("test")
-                .getOutboundRouter().getRouters().get(0);
+        final OutboundPassThroughRouter optr = (OutboundPassThroughRouter) testService.getOutboundRouter().getRouters().get(0);
 
-        assertEquals("erlang://remoteNode4@hostName/process4", optr.getEndpoint("erlout").getEndpointURI().toString());
+        final EndpointURI outboundEndpointURI = optr.getEndpoint("erlout").getEndpointURI();
+        assertEquals("erlang://remoteNode4@hostName/process5", outboundEndpointURI.toString());
+        assertEquals("process5", ErlangUtils.getProcessName(outboundEndpointURI));
     }
 
     private void testEndpointConfiguration(final EndpointFactory endpointFactory, final String endpointName,
