@@ -11,7 +11,7 @@ import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 
 public abstract class ErlangUtils {
-    public static final OtpErlangAtom GS_CAST_SIGNATURE = new OtpErlangAtom("$gen_cast");
+    public static final OtpErlangAtom GEN_CAST_SIGNATURE = new OtpErlangAtom("$gen_cast");
     public static final OtpErlangAtom GEN_CALL_SIGNATURE = new OtpErlangAtom("$gen_call");
 
     private ErlangUtils() {
@@ -33,10 +33,10 @@ public abstract class ErlangUtils {
         return StringUtils.stripStart(euri.getPath(), "/");
     }
 
-    public static ErlangInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {
+    public static ErlangOutboundInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {
         final Object invocationTypeProperty = ie.getProperty("invocationType");
         Validate.notNull(invocationTypeProperty, ErlangMessages.missingEndpointProperty("invocationType").getMessage());
-        return ErlangInvocation.InvocationType.valueOf(invocationTypeProperty.toString());
+        return ErlangOutboundInvocation.InvocationType.valueOf(invocationTypeProperty.toString());
     }
 
     public static boolean isFailIfTimeout(final ImmutableEndpoint ie) {

@@ -15,6 +15,7 @@ import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
 
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.StartException;
@@ -93,10 +94,10 @@ public class ErlangMessageReceiver extends AbstractMessageReceiver {
         public void run() {
             while (running) {
                 try {
-                    final OtpErlangObject oeo = otpMbox.receive(MBOX_RECEIVE_TIMEOUT);
+                    final OtpErlangObject receivedErlangObject = otpMbox.receive(MBOX_RECEIVE_TIMEOUT);
 
-                    if (oeo != null) {
-                        getWorkManager().scheduleWork(new ErlangMessageRouterWorker(ErlangMessageReceiver.this, oeo),
+                    if (receivedErlangObject != null) {
+                        getWorkManager().scheduleWork(new ErlangMessageRouterWorker(receivedErlangObject),
                                 WorkManager.INDEFINITE, null, null);
                     }
                 } catch (final WorkException we) {
@@ -109,6 +110,36 @@ public class ErlangMessageReceiver extends AbstractMessageReceiver {
 
         public void release() {
             running = false;
+        }
+    }
+
+    private final class ErlangMessageRouterWorker implements Work {
+
+        private final OtpErlangObject receivedErlangObject;
+
+        public ErlangMessageRouterWorker(final OtpErlangObject receivedErlangObject) {
+            this.receivedErlangObject = receivedErlangObject;
+        }
+
+        public void run() {
+            try {
+                final ErlangInboundInvocation invocation = new ErlangInboundInvocation(ErlangMessageReceiver.this,
+                        receivedErlangObject);
+                // TODO consider adding properties: erlang.invocationType,erlang.ref,erlang.remotePid
+                final MuleMessage routedMessage = createMuleMessage(invocation.getPayloadToRoute());
+                final MuleMessage result = routeMessage(routedMessage);
+                invocation.respondIfNecessaryAndPossible(result);
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Invocation: " + invocation + " tried to respond: " + result);
+                }
+            } catch (final MuleException me) {
+                handleException(me);
+            }
+        }
+
+        public void release() {
+            // noop
         }
     }
 

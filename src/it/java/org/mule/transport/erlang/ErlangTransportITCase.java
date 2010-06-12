@@ -91,6 +91,4 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         assertEquals(expectedState, responseArray[2]);
     }
 
-    // TODO test dynamic dispatch (property in msg)
-
 }

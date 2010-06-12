@@ -12,7 +12,7 @@ package org.mule.transport.erlang.i18n;
 
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.transport.erlang.ErlangInvocation.InvocationType;
+import org.mule.transport.erlang.ErlangOutboundInvocation.InvocationType;
 
 public class ErlangMessages extends MessageFactory {
     private static final ErlangMessages MF = new ErlangMessages();

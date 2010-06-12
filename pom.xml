@@ -14,6 +14,7 @@
   <properties>
     <mule.version>3.0.0-M4-SNAPSHOT</mule.version>
     <jinterface.version>1.5.1</jinterface.version>
+    <activemq.version>5.3.0</activemq.version>
     <!-- Tools properties -->
     <eclipsePluginVersion>2.5</eclipsePluginVersion>
     <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
@@ -309,6 +310,11 @@
       <artifactId>mule-transport-stdio</artifactId>
       <version>${mule.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.mule.transports</groupId>
+      <artifactId>mule-transport-jms</artifactId>
+      <version>${mule.version}</version>
+    </dependency>
 
     <!-- Mule Modules -->
     <dependency>
@@ -325,7 +331,12 @@
       <classifier>jdk-${jdk.version}</classifier>
     </dependency>
 
-    <!-- for testing -->
+    <!-- For testing -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <version>${activemq.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.mule.tests</groupId>
       <artifactId>mule-tests-functional</artifactId>

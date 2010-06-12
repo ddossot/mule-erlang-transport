@@ -19,7 +19,6 @@ import com.ericsson.otp.erlang.OtpErlangObject;
 /**
  * <code>ObjectToErlangMessage</code> converts a Java Object to an OtpErlangObject.
  */
-@SuppressWarnings("unchecked")
 public class ObjectToErlangMessage extends AbstractMessageAwareTransformer {
 
     public ObjectToErlangMessage() {

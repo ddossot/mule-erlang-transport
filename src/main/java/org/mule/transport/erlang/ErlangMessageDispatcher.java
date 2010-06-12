@@ -19,7 +19,7 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.AbstractMessageDispatcher;
 import org.mule.transport.ConnectException;
-import org.mule.transport.erlang.ErlangInvocation.InvocationType;
+import org.mule.transport.erlang.ErlangOutboundInvocation.InvocationType;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
@@ -94,7 +94,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         final String invocationTargetProcessName = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
                 targetProcessName);
 
-        return new ErlangInvocation(event, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout).call();
+        return new ErlangOutboundInvocation(event, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout).call();
     }
 
     public OtpErlangPid getPid() {
