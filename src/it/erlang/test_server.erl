@@ -10,8 +10,31 @@ main(_) ->
 
 loop(State) ->
   receive
-    {Pid, stop} -> io:format("stopping test_server~n"), unregister(mule_test_server), Pid ! stopped;
-    {Pid, Msg} -> io:format("replying to: ~p~n", [Pid]), Pid ! {self(), {raw_ack, Msg, State}}, loop(undefined);
-    Other -> io:format("new state: ~p~n", [Other]), loop(Other)
+    {Pid, stop} ->
+	io:format("stopping test_server~n"),
+	unregister(mule_test_server),
+	Pid ! stopped;
+
+    {Pid, Msg} ->
+	io:format("replying to: ~p~n", [Pid]), Pid ! {self(), {raw_ack, Msg, State}},
+	loop(Msg);
+
+    Text when is_list(Text) ->
+	io:format("calling capitalizer for: ~p~n", [Text]),
+	MuleNode = mule_node(),
+	CapitalizedText = gen_server:call({capitalizer, MuleNode}, Text),
+	gen_server:cast({jms_bridge, MuleNode}, CapitalizedText),
+	{jms_bridge, MuleNode}!lists:reverse(CapitalizedText),
+	% PID wrapped to an async endpoint -> no reply
+	{jms_bridge, MuleNode}!{self(), string:to_upper(Text)},
+
+	loop(undefined);
+
+    Other ->
+	io:format("ignored: ~p~n", [Other]),
+	loop(State)
   end.
+
+mule_node() ->
+  list_to_atom("MuleIT@" ++ net_adm:localhost()).
 

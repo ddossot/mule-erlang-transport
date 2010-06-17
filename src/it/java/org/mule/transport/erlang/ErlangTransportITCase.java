@@ -1,8 +1,12 @@
 package org.mule.transport.erlang;
 
 import java.net.InetAddress;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -31,26 +35,24 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         return "erlang-it-config.xml";
     }
 
-    public void testRawAndPidWrapped() throws Exception {
-        final Object expectedState = doRaw();
-
-        // this hacky sleep lives time for raw message to hit erlang server
-        // TODO replace this with a loop back when inbound will be supported
-        Thread.sleep(1000L);
-
-        doPidWrapped(expectedState);
-    }
-
-    // FIXME add test for inbound and fix above hack
-
-    private Object doRaw() throws Exception {
-        final Long testPayload = RandomUtils.nextLong();
+    public void testRaw() throws Exception {
+        final String testPayload = RandomStringUtils.randomAlphabetic(5) + " " + RandomStringUtils.randomAlphabetic(5);
 
         muleClient.dispatch("vm://RawTest.IN", testPayload, null);
-        return testPayload;
+
+        while (getFunctionalTestComponent("JmsDrain").getReceivedMessagesCount() < 3) {
+            Thread.sleep(500L);
+        }
+
+        final List<Object> receivedMessages = Arrays.asList(getFunctionalTestComponent("JmsDrain").getReceivedMessage(1),
+                getFunctionalTestComponent("JmsDrain").getReceivedMessage(2),getFunctionalTestComponent("JmsDrain").getReceivedMessage(3));
+        final String capitalizedTestPayload = WordUtils.capitalizeFully(testPayload);
+        assertTrue(receivedMessages.contains(capitalizedTestPayload));
+        assertTrue(receivedMessages.contains(StringUtils.reverse(capitalizedTestPayload)));
+        assertTrue(receivedMessages.contains(StringUtils.upperCase(testPayload)));
     }
 
-    private void doPidWrapped(final Object expectedState) throws Exception {
+    public void testPidWrapped() throws Exception {
         final String testPayload = RandomStringUtils.randomAlphanumeric(20);
 
         final MuleMessage result = muleClient.send("vm://PidWrapped.IN", testPayload, null);
@@ -61,7 +63,6 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         final Object[] responseArray = (Object[]) payload;
         assertEquals("raw_ack", responseArray[0]);
         assertEquals(testPayload, responseArray[1]);
-        assertEquals(expectedState, responseArray[2]);
     }
 
     public void testGenServerCastAndCall() throws Exception {
