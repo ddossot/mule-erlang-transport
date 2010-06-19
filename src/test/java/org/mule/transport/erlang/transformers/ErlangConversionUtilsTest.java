@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangBinary;
 import com.ericsson.otp.erlang.OtpErlangPid;
 import com.ericsson.otp.erlang.OtpErlangString;
 
@@ -41,6 +42,8 @@ public class ErlangConversionUtilsTest {
         assertEquals("atom", "atom", ErlangConversionUtils.erlangToJava(new OtpErlangAtom("atom")));
         assertEquals("pid", new OtpErlangPid("test", 1, 2, 3), ErlangConversionUtils.erlangToJava(new OtpErlangPid("test", 1,
                 2, 3)));
+        assertEquals("binary", "binary", new String((byte[]) ErlangConversionUtils.erlangToJava(new OtpErlangBinary("binary"
+                .getBytes()))));
     }
 
     @Test

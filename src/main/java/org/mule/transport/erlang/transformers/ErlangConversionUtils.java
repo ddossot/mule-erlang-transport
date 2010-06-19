@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangBinary;
 import com.ericsson.otp.erlang.OtpErlangBoolean;
 import com.ericsson.otp.erlang.OtpErlangByte;
 import com.ericsson.otp.erlang.OtpErlangChar;
@@ -110,6 +111,9 @@ public abstract class ErlangConversionUtils {
         try {
             if (erl instanceof OtpErlangString) {
                 return ((OtpErlangString) erl).stringValue();
+            }
+            if (erl instanceof OtpErlangBinary) {
+                return ((OtpErlangBinary) erl).binaryValue();
             }
             if (erl instanceof OtpErlangChar) {
                 return ((OtpErlangChar) erl).charValue();
