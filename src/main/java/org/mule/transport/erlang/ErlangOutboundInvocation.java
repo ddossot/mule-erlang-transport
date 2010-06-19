@@ -9,6 +9,8 @@ import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
+import com.ericsson.otp.erlang.OtpErlangAtom;
+import com.ericsson.otp.erlang.OtpErlangList;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 import com.ericsson.otp.erlang.OtpMbox;
@@ -47,11 +49,11 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
         },
 
         // {'$gen_call',{<Pid Sender>,Ref},Msg}
-        GS_CALL {
+        GEN_CALL {
             @Override
             OtpErlangObject preProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject payload) {
-                return ErlangUtils.makeTuple(ErlangUtils.GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(invocation.senderMbox.self(),
-                        invocation.connector.createRef()), payload);
+                return ErlangUtils.makeTuple(ErlangUtils.GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(
+                        invocation.senderMbox.self(), invocation.connector.createRef()), payload);
             }
 
             @Override
@@ -70,13 +72,13 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
                     throw new IllegalArgumentException(ErlangMessages.badResponseFormat(this).getMessage());
                 }
 
-                // TODO check REF is what expected (ideally should pattern match on inbox for this ref)
+                // LATER check REF is what expected (ideally should pattern match on inbox for this ref)
                 return resultTuple.elementAt(1);
             }
         },
 
         // {'$gen_cast',Msg}
-        GS_CAST {
+        GEN_CAST {
             @Override
             OtpErlangObject preProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject payload) {
                 return ErlangUtils.makeTuple(ErlangUtils.GEN_CAST_SIGNATURE, payload);
@@ -86,6 +88,62 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
             boolean isResponseExpected(final ErlangOutboundInvocation ignored) {
                 return false;
             }
+        },
+
+        // { self, { call, Mod, Fun, Args, user } } to process rex
+        RPC {
+            @Override
+            String getTargetProcessName(final ErlangOutboundInvocation arg0) {
+                return "rex";
+            }
+
+            @Override
+            OtpErlangObject preProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject payload) {
+                final String invocationTargetModuleFunction = invocation.muleEvent.getMessage().getStringProperty(
+                        ErlangProperties.MODULE_FUNCTION_PROPERTY,
+                        ErlangUtils.getModuleFunction(invocation.muleEvent.getEndpoint().getEndpointURI()));
+
+                final String[] invocationTargetModuleFunctionParts = invocationTargetModuleFunction.split(":");
+                if (invocationTargetModuleFunctionParts.length != 2) {
+                    throw new IllegalArgumentException(ErlangMessages.badModuleFunctionFormat(invocationTargetModuleFunction)
+                            .toString());
+                }
+
+                final String module = invocationTargetModuleFunctionParts[0];
+                final String function = invocationTargetModuleFunctionParts[1];
+
+                OtpErlangList arguments = new OtpErlangList();
+
+                if (payload instanceof OtpErlangList) {
+                    arguments = (OtpErlangList) payload;
+                } else if (payload instanceof OtpErlangObject) {
+                    arguments = new OtpErlangList(payload);
+                }
+
+                return ErlangUtils.makeTuple(invocation.senderMbox.self(), ErlangUtils.makeTuple(new OtpErlangAtom("call"),
+                        new OtpErlangAtom(module), new OtpErlangAtom(function), arguments, new OtpErlangAtom("user")));
+            }
+
+            @Override
+            boolean isResponseExpected(final ErlangOutboundInvocation ignored) {
+                return true;
+            }
+
+            @Override
+            OtpErlangObject postProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject result) {
+                if (!(result instanceof OtpErlangTuple)) {
+                    throw new IllegalArgumentException(ErlangMessages.badResponseFormat(this).getMessage());
+                }
+
+                final OtpErlangTuple resultTuple = (OtpErlangTuple) result;
+                if (resultTuple.arity() != 2) {
+                    throw new IllegalArgumentException(ErlangMessages.badResponseFormat(this).getMessage());
+                }
+
+                // LATER check element 0 is 'rex'
+                return resultTuple.elementAt(1);
+            }
+
         };
 
         OtpErlangObject process(final ErlangOutboundInvocation invocation) throws Exception {
@@ -93,7 +151,7 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
 
             final OtpErlangObject preProcessedPayload = preProcess(invocation, payload);
 
-            invocation.senderMbox.send(invocation.invocationTargetProcessName, invocation.erlangNodeName, preProcessedPayload);
+            invocation.senderMbox.send(getTargetProcessName(invocation), invocation.erlangNodeName, preProcessedPayload);
 
             if (isResponseExpected(invocation)) {
                 final OtpErlangObject result = invocation.senderMbox.receive(invocation.muleEvent.getTimeout());
@@ -110,6 +168,12 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
             return null;
         }
 
+        String getTargetProcessName(final ErlangOutboundInvocation invocation) {
+            // TODO document this dynamic support
+            return invocation.muleEvent.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
+                    ErlangUtils.getProcessName(invocation.muleEvent.getEndpoint().getEndpointURI()));
+        }
+
         OtpErlangObject preProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject payload) {
             return payload;
         }
@@ -124,17 +188,15 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
 
     };
 
-    // TODO replace with a builder
     private final MuleEvent muleEvent;
     private final ErlangConnector connector;
     private final String erlangNodeName;
     private final OtpMbox senderMbox;
-    private final String invocationTargetProcessName;
     private final InvocationType invocationType;
     private final boolean failIfTimeout;
 
-    public ErlangOutboundInvocation(final MuleEvent muleEvent, final OtpMbox senderMbox, final String invocationTargetProcessName,
-            final InvocationType invocationType, final boolean failIfTimeout) {
+    public ErlangOutboundInvocation(final MuleEvent muleEvent, final OtpMbox senderMbox, final InvocationType invocationType,
+            final boolean failIfTimeout) {
 
         this.muleEvent = muleEvent;
         final ImmutableEndpoint endpoint = muleEvent.getEndpoint();
@@ -142,7 +204,6 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
         erlangNodeName = ErlangUtils.getErlangNodeName(endpoint.getEndpointURI());
 
         this.senderMbox = senderMbox;
-        this.invocationTargetProcessName = invocationTargetProcessName;
         this.invocationType = invocationType;
         this.failIfTimeout = failIfTimeout;
     }

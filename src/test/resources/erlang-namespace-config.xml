@@ -13,7 +13,9 @@
 
   <erlang:endpoint name="erlangEndpoint1" node="localNode1" processName="process1" connector-ref="erlangConnector1" />
   <erlang:endpoint name="erlangEndpoint2" node="remoteNode2@hostName" processName="process2" connector-ref="erlangConnector1" />
-  <erlang:endpoint name="erlangEndpoint3" node="remoteNode3@hostName" processName="process3" invocationType="GS_CALL"
+  <erlang:endpoint name="erlangEndpoint3" node="remoteNode3@hostName" processName="process3" invocationType="GEN_CALL"
+    connector-ref="erlangConnector1" failIfTimeout="true" />
+  <erlang:endpoint name="erlangEndpoint4" node="remoteNode4@hostName" moduleFunction="erlang:node" invocationType="RPC"
     connector-ref="erlangConnector1" failIfTimeout="true" />
 
   <model name="unit-tests">

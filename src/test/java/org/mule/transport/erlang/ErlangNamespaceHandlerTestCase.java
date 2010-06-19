@@ -64,7 +64,9 @@ public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase {
         testEndpointConfiguration(endpointFactory, "erlangEndpoint2", "remoteNode2@hostName", "process2",
                 ErlangOutboundInvocation.InvocationType.PID_WRAPPED, false);
         testEndpointConfiguration(endpointFactory, "erlangEndpoint3", "remoteNode3@hostName", "process3",
-                ErlangOutboundInvocation.InvocationType.GS_CALL, true);
+                ErlangOutboundInvocation.InvocationType.GEN_CALL, true);
+        testEndpointConfiguration(endpointFactory, "erlangEndpoint4", "remoteNode4@hostName", "erlang:node",
+                ErlangOutboundInvocation.InvocationType.RPC, true);
     }
 
     public void testEndpointsInService() throws Exception {

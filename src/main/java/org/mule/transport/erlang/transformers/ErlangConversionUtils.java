@@ -30,6 +30,7 @@ import com.ericsson.otp.erlang.OtpErlangTuple;
 public abstract class ErlangConversionUtils {
 
     // TODO add support for Map <-> PropList, stream/byte[] <-> Binary conversions
+    // TODO document type mapping
 
     private ErlangConversionUtils() {
         throw new UnsupportedOperationException("do not instantiate");
@@ -142,7 +143,7 @@ public abstract class ErlangConversionUtils {
                 return erlangObjectsToJava(((OtpErlangTuple) erl).elements()).toArray();
             }
             if (erl instanceof OtpErlangAtom) {
-                return ((OtpErlangAtom) erl).toString();
+                return ((OtpErlangAtom) erl).atomValue();
             }
             if (erl instanceof OtpErlangList) {
                 return erlangObjectsToJava(((OtpErlangList) erl).elements());

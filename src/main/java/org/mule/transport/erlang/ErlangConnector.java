@@ -34,6 +34,7 @@ public class ErlangConnector extends AbstractConnector {
     private String nodeName;
     private String cookie;
     private Integer port;
+
     // TODO add an option for attempting to start EPMD if not running
 
     private OtpNode otpNode;

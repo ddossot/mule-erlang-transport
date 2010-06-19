@@ -15,9 +15,6 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.transport.MessageRequester;
 import org.mule.transport.AbstractMessageRequesterFactory;
 
-/**
- * <code>ErlangMessageRequester</code> TODO document
- */
 public class ErlangMessageRequesterFactory extends AbstractMessageRequesterFactory {
 
     @Override

@@ -77,7 +77,7 @@
                it's done here only for testing purposes -->
           <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
                                     processName="mule_test_gen_server"
-                                    invocationType="GS_CAST"
+                                    invocationType="GEN_CAST"
                                     synchronous="true" />
         </pass-through-router>
       </outbound>
@@ -91,7 +91,22 @@
         <pass-through-router>
           <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
                                     processName="mule_test_gen_server"
-                                    invocationType="GS_CALL"
+                                    invocationType="GEN_CALL"
+                                    failIfTimeout="true"
+                                    synchronous="true" />
+        </pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="RpcCallTest">
+      <inbound>
+        <vm:inbound-endpoint path="RpcCallTest.IN" synchronous="true" />
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                                    moduleFunction="string:to_upper"
+                                    invocationType="RPC"
                                     failIfTimeout="true"
                                     synchronous="true" />
         </pass-through-router>

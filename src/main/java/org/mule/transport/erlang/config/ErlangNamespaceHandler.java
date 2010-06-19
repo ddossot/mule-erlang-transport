@@ -9,8 +9,13 @@
  */
 package org.mule.transport.erlang.config;
 
+import org.mule.config.spring.factories.InboundEndpointFactoryBean;
+import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
+import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
 import org.mule.endpoint.URIBuilder;
 import org.mule.transport.erlang.ErlangConnector;
 import org.mule.transport.erlang.ErlangProperties;
@@ -22,13 +27,12 @@ import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
+    public static final String[][] ERLANG_ATTRIBUTES = new String[][] {
+            new String[] { ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.PROCESS_NAME_ATTRIBUTE },
+            new String[] { ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.MODULE_FUNCTION_ATTRIBUTE } };
+
     public void init() {
-        // TODO add required attributes here and in schema based on how the
-        // receiver and requester will evolve
-        registerStandardTransportEndpoints(ErlangConnector.ERLANG,
-                new String[] { ErlangProperties.NODE_PROPERTY, ErlangProperties.PROCESS_NAME_PROPERTY }).addAlias(
-                ErlangProperties.PROCESS_NAME_PROPERTY, URIBuilder.PATH).addAlias(ErlangProperties.NODE_PROPERTY,
-                URIBuilder.HOST);
+        registerErlangTransportEndpoints();
 
         registerConnectorDefinitionParser(ErlangConnector.class);
 
@@ -37,6 +41,30 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
         registerBeanDefinitionParser("object-erlang-message-transformer", new TransformerDefinitionParser(
                 ObjectToErlangMessage.class));
+    }
+
+    /**
+     * Need to use the most complex constructors as have mutually exclusive address attributes
+     */
+    protected void registerErlangTransportEndpoints() {
+        registerErlangEndpointDefinitionParser("endpoint", new TransportGlobalEndpointDefinitionParser(ErlangConnector.ERLANG,
+                TransportGlobalEndpointDefinitionParser.PROTOCOL,
+                TransportGlobalEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
+
+        registerErlangEndpointDefinitionParser("inbound-endpoint", new TransportEndpointDefinitionParser(
+                ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL, InboundEndpointFactoryBean.class,
+                TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
+
+        registerErlangEndpointDefinitionParser("outbound-endpoint", new TransportEndpointDefinitionParser(
+                ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL, OutboundEndpointFactoryBean.class,
+                TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
+    }
+
+    protected void registerErlangEndpointDefinitionParser(final String element, final MuleDefinitionParser parser) {
+        parser.addAlias(ErlangProperties.PROCESS_NAME_ATTRIBUTE, URIBuilder.PATH);
+        parser.addAlias(ErlangProperties.MODULE_FUNCTION_ATTRIBUTE, URIBuilder.PATH);
+        parser.addAlias(ErlangProperties.NODE_ATTRIBUTE, URIBuilder.HOST);
+        registerBeanDefinitionParser(element, parser);
     }
 
 }

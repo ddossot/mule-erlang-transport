@@ -33,6 +33,10 @@ public abstract class ErlangUtils {
         return StringUtils.stripStart(euri.getPath(), "/");
     }
 
+    public static String getModuleFunction(final EndpointURI endpointURI) {
+        return getProcessName(endpointURI);
+    }
+
     public static ErlangOutboundInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {
         final Object invocationTypeProperty = ie.getProperty("invocationType");
         Validate.notNull(invocationTypeProperty, ErlangMessages.missingEndpointProperty("invocationType").getMessage());

@@ -1,8 +1,11 @@
 package org.mule.transport.erlang;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +48,8 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         }
 
         final List<Object> receivedMessages = Arrays.asList(getFunctionalTestComponent("JmsDrain").getReceivedMessage(1),
-                getFunctionalTestComponent("JmsDrain").getReceivedMessage(2),getFunctionalTestComponent("JmsDrain").getReceivedMessage(3));
+                getFunctionalTestComponent("JmsDrain").getReceivedMessage(2), getFunctionalTestComponent("JmsDrain")
+                        .getReceivedMessage(3));
         final String capitalizedTestPayload = WordUtils.capitalizeFully(testPayload);
         assertTrue(receivedMessages.contains(capitalizedTestPayload));
         assertTrue(receivedMessages.contains(StringUtils.reverse(capitalizedTestPayload)));
@@ -63,6 +67,19 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         final Object[] responseArray = (Object[]) payload;
         assertEquals("raw_ack", responseArray[0]);
         assertEquals(testPayload, responseArray[1]);
+    }
+
+    public void testRPC() throws Exception {
+        final String testPayload = RandomStringUtils.randomAlphabetic(20);
+        final MuleMessage result = muleClient.send("vm://RpcCallTest.IN", testPayload, null);
+        assertEquals(testPayload.toUpperCase(), result.getPayload());
+    }
+
+    public void testRPCWithDynamicModuleFunction() throws Exception {
+        final Map<String, Object> props = new HashMap<String, Object>();
+        props.put("erlang.moduleFunction", "erlang:node");
+        final MuleMessage result = muleClient.send("vm://RpcCallTest.IN", new ArrayList<Object>(), props);
+        assertEquals("mule_test_server_node@" + InetAddress.getLocalHost().getHostName(), result.getPayload());
     }
 
     public void testGenServerCastAndCall() throws Exception {

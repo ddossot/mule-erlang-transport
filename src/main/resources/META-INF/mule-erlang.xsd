@@ -89,17 +89,24 @@
   </xsd:complexType>
 
   <xsd:attributeGroup name="addressAttributes">
-    <xsd:attribute name="processName" type="xsd:string" use="required">
+    <xsd:attribute name="node" type="xsd:string" default="connector.nodeName">
+      <xsd:annotation>
+        <xsd:documentation>
+          An Erlang node descriptor (typically: "nodeName@nodeHost").
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="processName" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>
           An Erlang process name.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="node" type="xsd:string" default="connector.nodeName">
+    <xsd:attribute name="moduleFunction" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>
-          An Erlang node descriptor (typically: nodeName@nodeHost).
+          An Erlang module and function as "module:function" (for example: "erlang:node").
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -120,8 +127,9 @@
               <xsd:documentation>Wraps the current payload like this: {SenderPid, Payload}</xsd:documentation>
             </xsd:annotation>
           </xsd:enumeration>
-          <xsd:enumeration value="GS_CALL" />
-          <xsd:enumeration value="GS_CAST" />
+          <xsd:enumeration value="GEN_CALL" />
+          <xsd:enumeration value="GEN_CAST" />
+          <xsd:enumeration value="RPC" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>

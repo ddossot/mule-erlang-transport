@@ -13,6 +13,8 @@ import com.ericsson.otp.erlang.OtpErlangTuple;
 
 public class ErlangInboundInvocation {
 
+    // LATER consider support inbound RPC (security risk: can invoke java.lang.System.exit())
+
     private static final Log LOGGER = LogFactory.getLog(ErlangInboundInvocation.class);
 
     public static enum InvocationType {

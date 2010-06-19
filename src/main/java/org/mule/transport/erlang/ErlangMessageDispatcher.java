@@ -11,7 +11,6 @@
 package org.mule.transport.erlang;
 
 import org.apache.commons.lang.Validate;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
@@ -27,16 +26,12 @@ import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangPid;
 import com.ericsson.otp.erlang.OtpMbox;
 
-/**
- * <code>ErlangMessageDispatcher</code> TODO document
- */
 public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     private final ErlangConnector connector;
     private final InvocationType invocationType;
     private final boolean failIfTimeout;
     private final String targetNodeName; // contains node or node@host
-    private final String targetProcessName;
 
     private OtpMbox otpMbox;
 
@@ -49,13 +44,11 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
         final EndpointURI endpointURI = endpoint.getEndpointURI();
         targetNodeName = ErlangUtils.getErlangNodeName(endpointURI);
-        targetProcessName = ErlangUtils.getProcessName(endpointURI);
     }
 
     @Override
     protected void doInitialise() throws InitialisationException {
         Validate.notEmpty(targetNodeName, ErlangMessages.missingEndpointProperty("targetNodeName").getMessage());
-        Validate.notEmpty(targetProcessName, ErlangMessages.missingEndpointProperty("targetProcessName").getMessage());
         super.doInitialise();
     }
 
@@ -86,15 +79,11 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     @Override
     public MuleMessage doSend(final MuleEvent event) throws Exception {
         final OtpErlangObject result = doInvokeRemote(event);
-        return new DefaultMuleMessage(ErlangConversionUtils.erlangToJava(result), connector.getMuleContext());
+        return createMuleMessage(ErlangConversionUtils.erlangToJava(result));
     }
 
     private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception {
-        // supports message level override of the target process (for dynamic dispatch)
-        final String invocationTargetProcessName = event.getMessage().getStringProperty(ErlangProperties.PROCESS_NAME_PROPERTY,
-                targetProcessName);
-
-        return new ErlangOutboundInvocation(event, otpMbox, invocationTargetProcessName, invocationType, failIfTimeout).call();
+        return new ErlangOutboundInvocation(event, otpMbox, invocationType, failIfTimeout).call();
     }
 
     public OtpErlangPid getPid() {

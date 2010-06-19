@@ -46,4 +46,12 @@ public class ErlangMessages extends MessageFactory {
         return MF.createMessage(BUNDLE_PATH, 6, name);
     }
 
+    public static Message badModuleFunctionFormat(final String moduleFunction) {
+        return MF.createMessage(BUNDLE_PATH, 7, moduleFunction);
+    }
+
+    public static Message illegalRpcResponse(final String responseAsString) {
+        return MF.createMessage(BUNDLE_PATH, 8, responseAsString);
+    }
+
 }
