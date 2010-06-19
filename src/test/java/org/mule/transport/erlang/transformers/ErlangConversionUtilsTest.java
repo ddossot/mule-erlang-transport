@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
-import com.ericsson.otp.erlang.OtpErlangBinary;
 import com.ericsson.otp.erlang.OtpErlangPid;
 import com.ericsson.otp.erlang.OtpErlangString;
 
@@ -31,10 +30,19 @@ public class ErlangConversionUtilsTest {
     }
 
     @Test
-    public void arrayRoundTrip() {
-        final Object[] value = new Object[] { 1, "a", Math.PI };
-        assertEquals(Arrays.asList(value), Arrays.asList((Object[]) ErlangConversionUtils.erlangToJava(ErlangConversionUtils
-                .javaToErlang(value))));
+    public void byteArrayRoundTrip() {
+        final byte[] source = "hello".getBytes();
+
+        assertEquals("hello", new String((byte[]) ErlangConversionUtils
+                .erlangToJava(ErlangConversionUtils.javaToErlang(source))));
+    }
+
+    @Test
+    public void miscArrayRoundTrip() {
+        final Object[] source = new Object[] { 1, "a", Math.PI };
+
+        assertEquals(Arrays.asList(source), Arrays.asList((Object[]) ErlangConversionUtils.erlangToJava(ErlangConversionUtils
+                .javaToErlang(source))));
     }
 
     @Test
@@ -42,8 +50,6 @@ public class ErlangConversionUtilsTest {
         assertEquals("atom", "atom", ErlangConversionUtils.erlangToJava(new OtpErlangAtom("atom")));
         assertEquals("pid", new OtpErlangPid("test", 1, 2, 3), ErlangConversionUtils.erlangToJava(new OtpErlangPid("test", 1,
                 2, 3)));
-        assertEquals("binary", "binary", new String((byte[]) ErlangConversionUtils.erlangToJava(new OtpErlangBinary("binary"
-                .getBytes()))));
     }
 
     @Test

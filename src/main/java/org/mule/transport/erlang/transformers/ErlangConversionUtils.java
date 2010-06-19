@@ -82,6 +82,9 @@ public abstract class ErlangConversionUtils {
         if (obj instanceof Boolean) {
             return new OtpErlangBoolean((Boolean) obj);
         }
+        if (obj instanceof byte[]) {
+            return new OtpErlangBinary((byte[]) obj);
+        }
         if (obj.getClass().isArray()) {
             final int length = Array.getLength(obj);
             final OtpErlangObject[] erlangObjects = new OtpErlangObject[length];
