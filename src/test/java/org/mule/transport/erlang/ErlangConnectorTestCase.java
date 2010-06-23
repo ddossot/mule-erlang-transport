@@ -52,4 +52,9 @@ public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
         // testing
     }
 
+    @Override
+    public void testConnectorMessageRequesterFactory() throws Exception {
+        // Deactivated: this connector doesn't support requesting.
+    }
+
 }
