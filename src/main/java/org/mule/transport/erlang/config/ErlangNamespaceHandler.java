@@ -23,7 +23,8 @@ import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
 /**
- * Registers a Bean Definition Parser for handling <code><erlang:connector></code> elements and supporting endpoint elements.
+ * Registers a Bean Definition Parser for handling
+ * <code><erlang:connector></code> elements and supporting endpoint elements.
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
@@ -36,27 +37,26 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler {
 
         registerConnectorDefinitionParser(ErlangConnector.class);
 
-        registerBeanDefinitionParser("erlang-message-to-object-transformer", new TransformerDefinitionParser(
-                ErlangMessageToObject.class));
+        registerBeanDefinitionParser("erlang-message-to-object-transformer", new TransformerDefinitionParser(ErlangMessageToObject.class));
 
-        registerBeanDefinitionParser("object-erlang-message-transformer", new TransformerDefinitionParser(
-                ObjectToErlangMessage.class));
+        registerBeanDefinitionParser("object-to-erlang-message-transformer", new TransformerDefinitionParser(ObjectToErlangMessage.class));
     }
 
     /**
-     * Need to use the most complex constructors as have mutually exclusive address attributes
+     * Need to use the most complex constructors as have mutually exclusive
+     * address attributes
      */
     protected void registerErlangTransportEndpoints() {
         registerErlangEndpointDefinitionParser("endpoint", new TransportGlobalEndpointDefinitionParser(ErlangConnector.ERLANG,
-                TransportGlobalEndpointDefinitionParser.PROTOCOL,
-                TransportGlobalEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
+                TransportGlobalEndpointDefinitionParser.PROTOCOL, TransportGlobalEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES,
+                ERLANG_ATTRIBUTES, new String[][] {}));
 
-        registerErlangEndpointDefinitionParser("inbound-endpoint", new TransportEndpointDefinitionParser(
-                ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL, InboundEndpointFactoryBean.class,
+        registerErlangEndpointDefinitionParser("inbound-endpoint", new TransportEndpointDefinitionParser(ErlangConnector.ERLANG,
+                TransportEndpointDefinitionParser.PROTOCOL, InboundEndpointFactoryBean.class,
                 TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
 
-        registerErlangEndpointDefinitionParser("outbound-endpoint", new TransportEndpointDefinitionParser(
-                ErlangConnector.ERLANG, TransportEndpointDefinitionParser.PROTOCOL, OutboundEndpointFactoryBean.class,
+        registerErlangEndpointDefinitionParser("outbound-endpoint", new TransportEndpointDefinitionParser(ErlangConnector.ERLANG,
+                TransportEndpointDefinitionParser.PROTOCOL, OutboundEndpointFactoryBean.class,
                 TransportEndpointDefinitionParser.RESTRICTED_ENDPOINT_ATTRIBUTES, ERLANG_ATTRIBUTES, new String[][] {}));
     }
 

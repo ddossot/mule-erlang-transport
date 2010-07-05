@@ -5,7 +5,7 @@
        http://www.mulesoft.org/schema/mule/erlang http://www.mulesoft.org/schema/mule/erlang/3.0/mule-erlang.xsd">
 
   <erlang:erlang-message-to-object-transformer name="e2oTransformer" />
-  <erlang:object-erlang-message-transformer name="o2eTransformer" />
+  <erlang:object-to-erlang-message-transformer name="o2eTransformer" />
 
   <erlang:connector name="erlangConnector1" nodeName="muleErlang1" />
   <erlang:connector name="erlangConnector2" nodeName="muleErlang2" cookie="xyz2" />
