@@ -2,7 +2,7 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:erlang="http://www.mulesoft.org/schema/mule/erlang"
   xsi:schemaLocation="
        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
-       http://www.mulesoft.org/schema/mule/erlang http://www.mulesoft.org/schema/mule/erlang/3.0/mule-erlang.xsd">
+       http://www.mulesoft.org/schema/mule/erlang http://dist.muleforge.org/erlang/schema/3.0/mule-erlang.xsd">
 
   <erlang:erlang-message-to-object-transformer name="e2oTransformer" />
   <erlang:object-to-erlang-message-transformer name="o2eTransformer" />

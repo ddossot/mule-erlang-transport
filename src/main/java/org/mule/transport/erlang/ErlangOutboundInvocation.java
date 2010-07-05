@@ -8,6 +8,7 @@ import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
+import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangList;
@@ -52,8 +53,8 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
         GEN_CALL {
             @Override
             OtpErlangObject preProcess(final ErlangOutboundInvocation invocation, final OtpErlangObject payload) {
-                return ErlangUtils.makeTuple(ErlangUtils.GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(
-                        invocation.senderMbox.self(), invocation.connector.createRef()), payload);
+                return ErlangUtils.makeTuple(ErlangUtils.GEN_CALL_SIGNATURE, ErlangUtils.makeTuple(invocation.senderMbox.self(),
+                        invocation.connector.createRef()), payload);
             }
 
             @Override
@@ -72,7 +73,8 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
                     throw new IllegalArgumentException(ErlangMessages.badResponseFormat(this).getMessage());
                 }
 
-                // LATER check REF is what expected (ideally should pattern match on inbox for this ref)
+                // LATER check REF is what expected (ideally should pattern match on inbox for this
+                // ref)
                 return resultTuple.elementAt(1);
             }
         },
@@ -105,8 +107,7 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
 
                 final String[] invocationTargetModuleFunctionParts = invocationTargetModuleFunction.split(":");
                 if (invocationTargetModuleFunctionParts.length != 2) {
-                    throw new IllegalArgumentException(ErlangMessages.badModuleFunctionFormat(invocationTargetModuleFunction)
-                            .toString());
+                    throw new IllegalArgumentException(ErlangMessages.badModuleFunctionFormat(invocationTargetModuleFunction).toString());
                 }
 
                 final String module = invocationTargetModuleFunctionParts[0];
@@ -146,8 +147,11 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject> {
 
         };
 
-        OtpErlangObject process(final ErlangOutboundInvocation invocation) throws Exception {
-            final OtpErlangObject payload = (OtpErlangObject) invocation.muleEvent.transformMessage();
+        final OtpErlangObject process(final ErlangOutboundInvocation invocation) throws Exception {
+            final Object transformedPayload = invocation.muleEvent.transformMessage();
+
+            final OtpErlangObject payload = transformedPayload instanceof OtpErlangObject ? (OtpErlangObject) transformedPayload
+                    : ErlangConversionUtils.javaToErlang(transformedPayload);
 
             final OtpErlangObject preProcessedPayload = preProcess(invocation, payload);
 
