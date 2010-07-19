@@ -55,21 +55,23 @@
 
     <service name="PidWrappedTest">
       <inbound>
-        <vm:inbound-endpoint path="PidWrapped.IN" synchronous="true" />
+        <vm:inbound-endpoint path="PidWrapped.IN"
+                             exchange-pattern="request-response" />
       </inbound>
       <outbound>
         <pass-through-router>
           <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
                                     processName="mule_test_server"
                                     invocationType="PID_WRAPPED"
-                                    synchronous="true" />
+                                    exchange-pattern="request-response" />
         </pass-through-router>
       </outbound>
     </service>
 
     <service name="GenServerCastTest">
       <inbound>
-        <vm:inbound-endpoint path="GenServerCastTest.IN" synchronous="true" />
+        <vm:inbound-endpoint path="GenServerCastTest.IN"
+                             exchange-pattern="request-response" />
       </inbound>
       <outbound>
         <pass-through-router>
@@ -78,14 +80,15 @@
           <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
                                     processName="mule_test_gen_server"
                                     invocationType="GEN_CAST"
-                                    synchronous="true" />
+                                    exchange-pattern="request-response" />
         </pass-through-router>
       </outbound>
     </service>
 
     <service name="GenServerCallTest">
       <inbound>
-        <vm:inbound-endpoint path="GenServerCallTest.IN" synchronous="true" />
+        <vm:inbound-endpoint path="GenServerCallTest.IN"
+                             exchange-pattern="request-response" />
       </inbound>
       <outbound>
         <pass-through-router>
@@ -93,14 +96,15 @@
                                     processName="mule_test_gen_server"
                                     invocationType="GEN_CALL"
                                     failIfTimeout="true"
-                                    synchronous="true" />
+                                    exchange-pattern="request-response" />
         </pass-through-router>
       </outbound>
     </service>
 
     <service name="RpcCallTest">
       <inbound>
-        <vm:inbound-endpoint path="RpcCallTest.IN" synchronous="true" />
+        <vm:inbound-endpoint path="RpcCallTest.IN"
+                             exchange-pattern="request-response" />
       </inbound>
       <outbound>
         <pass-through-router>
@@ -108,7 +112,7 @@
                                     moduleFunction="string:to_upper"
                                     invocationType="RPC"
                                     failIfTimeout="true"
-                                    synchronous="true" />
+                                    exchange-pattern="request-response" />
         </pass-through-router>
       </outbound>
     </service>
@@ -116,7 +120,7 @@
     <service name="ErlangInOutService">
       <inbound>
         <erlang:inbound-endpoint processName="capitalizer"
-                                 synchronous="true" />
+                                 exchange-pattern="request-response" />
       </inbound>
       <component>
         <method-entry-point-resolver>
@@ -129,7 +133,7 @@
     <service name="ErlangInOnlyService">
       <inbound>
         <erlang:inbound-endpoint processName="jms_bridge"
-                                 synchronous="false" />
+                                 exchange-pattern="one-way" />
       </inbound>
       <outbound>
         <pass-through-router>
