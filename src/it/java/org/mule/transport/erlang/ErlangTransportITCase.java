@@ -1,3 +1,4 @@
+
 package org.mule.transport.erlang;
 
 import java.net.InetAddress;
@@ -17,46 +18,55 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.NullPayload;
 
-public class ErlangTransportITCase extends FunctionalTestCase {
+public class ErlangTransportITCase extends FunctionalTestCase
+{
 
     private MuleClient muleClient;
 
     @Override
-    protected void suitePreSetUp() throws Exception {
+    protected void suitePreSetUp() throws Exception
+    {
         super.suitePreSetUp();
         System.setProperty("host.name", InetAddress.getLocalHost().getHostName());
     }
 
     @Override
-    protected void doSetUp() throws Exception {
+    protected void doSetUp() throws Exception
+    {
         super.doSetUp();
         muleClient = new MuleClient(muleContext);
     }
 
     @Override
-    protected String getConfigResources() {
+    protected String getConfigResources()
+    {
         return "erlang-it-config.xml";
     }
 
-    public void testRaw() throws Exception {
-        final String testPayload = RandomStringUtils.randomAlphabetic(5) + " " + RandomStringUtils.randomAlphabetic(5);
+    public void testRaw() throws Exception
+    {
+        final String testPayload = RandomStringUtils.randomAlphabetic(5) + " "
+                                   + RandomStringUtils.randomAlphabetic(5);
 
         muleClient.dispatch("vm://RawTest.IN", testPayload, null);
 
-        while (getFunctionalTestComponent("JmsDrain").getReceivedMessagesCount() < 3) {
+        while (getFunctionalTestComponent("JmsDrain").getReceivedMessagesCount() < 3)
+        {
             Thread.sleep(500L);
         }
 
-        final List<Object> receivedMessages = Arrays.asList(getFunctionalTestComponent("JmsDrain").getReceivedMessage(1),
-                getFunctionalTestComponent("JmsDrain").getReceivedMessage(2), getFunctionalTestComponent("JmsDrain")
-                        .getReceivedMessage(3));
+        final List<Object> receivedMessages = Arrays.asList(
+            getFunctionalTestComponent("JmsDrain").getReceivedMessage(1), getFunctionalTestComponent(
+                "JmsDrain").getReceivedMessage(2), getFunctionalTestComponent("JmsDrain").getReceivedMessage(
+                3));
         final String capitalizedTestPayload = WordUtils.capitalizeFully(testPayload);
         assertTrue(receivedMessages.contains(capitalizedTestPayload));
         assertTrue(receivedMessages.contains(StringUtils.reverse(capitalizedTestPayload)));
         assertTrue(receivedMessages.contains(StringUtils.upperCase(testPayload)));
     }
 
-    public void testPidWrapped() throws Exception {
+    public void testPidWrapped() throws Exception
+    {
         final String testPayload = RandomStringUtils.randomAlphanumeric(20);
 
         final MuleMessage result = muleClient.send("vm://PidWrapped.IN", testPayload, null);
@@ -69,25 +79,29 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         assertEquals(testPayload, responseArray[1]);
     }
 
-    public void testRPC() throws Exception {
+    public void testRPC() throws Exception
+    {
         final String testPayload = RandomStringUtils.randomAlphabetic(20);
         final MuleMessage result = muleClient.send("vm://RpcCallTest.IN", testPayload, null);
         assertEquals(testPayload.toUpperCase(), result.getPayload());
     }
 
-    public void testRPCWithDynamicModuleFunction() throws Exception {
+    public void testRPCWithDynamicModuleFunction() throws Exception
+    {
         final Map<String, Object> props = new HashMap<String, Object>();
         props.put("erlang.moduleFunction", "erlang:node");
         final MuleMessage result = muleClient.send("vm://RpcCallTest.IN", new ArrayList<Object>(), props);
         assertEquals("mule_test_server_node@" + InetAddress.getLocalHost().getHostName(), result.getPayload());
     }
 
-    public void testGenServerCastAndCall() throws Exception {
+    public void testGenServerCastAndCall() throws Exception
+    {
         final Object expectedState = doGenServerCast();
         doGenServerCall(expectedState);
     }
 
-    private Object doGenServerCast() throws Exception {
+    private Object doGenServerCast() throws Exception
+    {
         final Long testPayload = RandomUtils.nextLong();
 
         final MuleMessage result = muleClient.send("vm://GenServerCastTest.IN", testPayload, null);
@@ -95,7 +109,8 @@ public class ErlangTransportITCase extends FunctionalTestCase {
         return testPayload;
     }
 
-    private void doGenServerCall(final Object expectedState) throws MuleException {
+    private void doGenServerCall(final Object expectedState) throws MuleException
+    {
         final String testPayload = RandomStringUtils.randomAlphanumeric(20);
 
         final MuleMessage result = muleClient.send("vm://GenServerCallTest.IN", testPayload, null);
