@@ -5,35 +5,15 @@
   xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
   xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
   xmlns:test="http://www.mulesoft.org/schema/mule/test"
-  xmlns:spring="http://www.springframework.org/schema/beans"
-  xmlns:p="http://www.springframework.org/schema/p"
   xsi:schemaLocation="
        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
        http://www.mulesoft.org/schema/mule/erlang http://dist.muleforge.org/erlang/schema/3.0/mule-erlang.xsd
        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd
        http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.0/mule-jms.xsd
-       http://www.mulesoft.org/schema/mule/test http://www.mulesoft.org/schema/mule/test/3.0/mule-test.xsd
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-
-  <spring:beans>
-      <spring:bean name="AmqBroker"
-                 class="org.apache.activemq.broker.BrokerService"
-                 p:brokerName="erlang-it-amq-broker"
-                 p:persistent="false"
-                 p:useJmx="false"
-                 p:useShutdownHook="false"
-                 init-method="start"
-                 destroy-method="stop" />
-                 
-    <spring:bean name="AmqConnectionFactory"
-                 class="org.apache.activemq.spring.ActiveMQConnectionFactory"
-                 p:brokerURL="vm://erlang-it-amq-broker"
-                 depends-on="AmqBroker" />
-  </spring:beans>
+       http://www.mulesoft.org/schema/mule/test http://www.mulesoft.org/schema/mule/test/3.0/mule-test.xsd">
 
   <jms:activemq-connector name="JmsConnector"
-                          specification="1.1"
-                          connectionFactory-ref="AmqConnectionFactory" />
+                          specification="1.1" />
 
   <erlang:connector name="ErlangConnector" nodeName="MuleIT" cookie="mule_test_cookie" />
 
