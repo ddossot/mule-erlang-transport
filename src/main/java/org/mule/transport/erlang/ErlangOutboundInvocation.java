@@ -10,7 +10,6 @@ import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.transport.PropertyScope;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 import org.mule.transport.erlang.transformers.ErlangConversionUtils;
 
@@ -268,20 +267,7 @@ public class ErlangOutboundInvocation implements Callable<OtpErlangObject>
 
     private static String lookupStringProperty(MuleMessage message, String propName, String defaultValue)
     {
-        final PropertyScope[] searchedScopes = new PropertyScope[]{PropertyScope.OUTBOUND,
-            PropertyScope.INVOCATION, PropertyScope.SESSION, PropertyScope.INBOUND};
-
-        for (final PropertyScope propertyScope : searchedScopes)
-        {
-            final String value = message.getProperty(propName, propertyScope);
-
-            if (value != null)
-            {
-                return value;
-            }
-        }
-
-        return defaultValue;
+        return message.findPropertyInAnyScope(propName, defaultValue);
     }
 
 }
