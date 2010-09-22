@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mule.transports</groupId>
   <artifactId>mule-transport-erlang</artifactId>
   <packaging>jar</packaging>
   <name>Mule Erlang Transport</name>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.0.0</version>
   <description>Connects to Erlang nodes.</description>
   <url>http://www.muleforge.org/projects/${shortId}</url>
 
@@ -366,10 +363,10 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.muleforge.org/erlang/</connection>
-    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/</developerConnection>
+    <connection>scm:svn:http://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.0.0</connection>
+    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.0.0</developerConnection>
     <tag>HEAD</tag>
-    <url>http://svn.erlang.muleforge.org/</url>
+    <url>http://svn.erlang.muleforge.org/tags/mule-transport-erlang-3.0.0</url>
   </scm>
 
   <ciManagement>
