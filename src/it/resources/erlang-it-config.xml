@@ -16,116 +16,72 @@
                           specification="1.1" />
 
   <erlang:connector name="ErlangConnector" nodeName="MuleIT" cookie="mule_test_cookie" />
-
-  <model>
-    <service name="RawTest">
-      <inbound>
-        <vm:inbound-endpoint path="RawTest.IN" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
-                                    processName="mule_test_server"
-                                    invocationType="RAW" />
-        </pass-through-router>
-      </outbound>
-    </service>
-
-    <service name="PidWrappedTest">
-      <inbound>
-        <vm:inbound-endpoint path="PidWrapped.IN"
-                             exchange-pattern="request-response" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
-                                    processName="mule_test_server"
-                                    invocationType="PID_WRAPPED"
-                                    exchange-pattern="request-response" />
-        </pass-through-router>
-      </outbound>
-    </service>
-
-    <service name="GenServerCastTest">
-      <inbound>
-        <vm:inbound-endpoint path="GenServerCastTest.IN"
-                             exchange-pattern="request-response" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <!-- synchronous dispatch with gs_cast is nonsensical, as only null will come back
-               it's done here only for testing purposes -->
-          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
-                                    processName="mule_test_gen_server"
-                                    invocationType="GEN_CAST"
-                                    exchange-pattern="request-response" />
-        </pass-through-router>
-      </outbound>
-    </service>
-
-    <service name="GenServerCallTest">
-      <inbound>
-        <vm:inbound-endpoint path="GenServerCallTest.IN"
-                             exchange-pattern="request-response" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
-                                    processName="mule_test_gen_server"
-                                    invocationType="GEN_CALL"
-                                    failIfTimeout="true"
-                                    exchange-pattern="request-response" />
-        </pass-through-router>
-      </outbound>
-    </service>
-
-    <service name="RpcCallTest">
-      <inbound>
-        <vm:inbound-endpoint path="RpcCallTest.IN"
-                             exchange-pattern="request-response" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
-                                    moduleFunction="string:to_upper"
-                                    invocationType="RPC"
-                                    failIfTimeout="true"
-                                    exchange-pattern="request-response" />
-        </pass-through-router>
-      </outbound>
-    </service>
-
-    <service name="ErlangInOutService">
-      <inbound>
-        <erlang:inbound-endpoint processName="capitalizer"
-                                 exchange-pattern="request-response" />
-      </inbound>
-      <component>
-        <method-entry-point-resolver>
-            <include-entry-point method="capitalizeFully"/>
-        </method-entry-point-resolver>
-        <singleton-object class="org.apache.commons.lang.WordUtils" />
-      </component>    
-    </service>
-
-    <service name="ErlangInOnlyService">
-      <inbound>
-        <erlang:inbound-endpoint processName="jms_bridge"
-                                 exchange-pattern="one-way" />
-      </inbound>
-      <outbound>
-        <pass-through-router>
-          <jms:outbound-endpoint queue="erlang.it.queue" />
-        </pass-through-router>
-      </outbound>
-    </service>
-    
-    <service name="JmsDrain">
-      <inbound>
-        <jms:inbound-endpoint queue="erlang.it.queue" />
-      </inbound>
-      <test:component />
-    </service>
   
-  </model>
+  <bridge name="RawTest" exchange-pattern="one-way">
+    <vm:inbound-endpoint path="RawTest.IN" />
+    <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                              processName="mule_test_server"
+                              invocationType="RAW" />
+  </bridge>
+
+  <bridge name="PidWrappedTest">
+    <vm:inbound-endpoint path="PidWrapped.IN"
+                         exchange-pattern="request-response" />
+    <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                              processName="mule_test_server"
+                              invocationType="PID_WRAPPED"
+                              exchange-pattern="request-response" />
+  </bridge>
+
+  <bridge name="GenServerCastTest">
+    <vm:inbound-endpoint path="GenServerCastTest.IN"
+                         exchange-pattern="request-response" />
+    <!-- synchronous dispatch with gs_cast is nonsensical, as only null will come back
+         it's done here only for testing purposes -->
+    <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                              processName="mule_test_gen_server"
+                              invocationType="GEN_CAST"
+                              exchange-pattern="request-response" />
+  </bridge>
+
+  <bridge name="GenServerCallTest">
+    <vm:inbound-endpoint path="GenServerCallTest.IN"
+                         exchange-pattern="request-response" />
+    <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                              processName="mule_test_gen_server"
+                              invocationType="GEN_CALL"
+                              failIfTimeout="true"
+                              exchange-pattern="request-response" />
+  </bridge>
+
+  <bridge name="RpcCallTest">
+    <vm:inbound-endpoint path="RpcCallTest.IN"
+                         exchange-pattern="request-response" />
+    <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"
+                              moduleFunction="string:to_upper"
+                              invocationType="RPC"
+                              failIfTimeout="true"
+                              exchange-pattern="request-response" />
+  </bridge>
+    
+  <simple-service name="ErlangRequestResponseService">
+    <erlang:inbound-endpoint processName="capitalizer"
+                             exchange-pattern="request-response" />
+    <component>
+      <method-entry-point-resolver>
+          <include-entry-point method="capitalizeFully"/>
+      </method-entry-point-resolver>
+      <singleton-object class="org.apache.commons.lang.WordUtils" />
+    </component>    
+  </simple-service>
+
+  <bridge name="ErlangOneWayService" exchange-pattern="one-way">
+    <erlang:inbound-endpoint processName="jms_bridge" />
+    <jms:outbound-endpoint queue="erlang.it.queue" />
+  </bridge>
+  
+  <flow name="JmsDrain">
+    <jms:inbound-endpoint queue="erlang.it.queue" />
+    <test:component />
+  </flow>
 </mule>

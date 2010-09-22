@@ -18,10 +18,10 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.construct.FlowConstruct;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.StartException;
-import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractMessageReceiver;
 import org.mule.transport.ConnectException;
@@ -47,10 +47,10 @@ public class ErlangMessageReceiver extends AbstractMessageReceiver
     private ErlangMessageReceiverWorker erlangMessageReceiverWorker;
 
     public ErlangMessageReceiver(final Connector connector,
-                                 final Service service,
+                                 final FlowConstruct flowConstruct,
                                  final InboundEndpoint endpoint) throws CreateException
     {
-        super(connector, service, endpoint);
+        super(connector, flowConstruct, endpoint);
         this.connector = (ErlangConnector) connector;
     }
 
