@@ -10,7 +10,7 @@
   <url>http://www.muleforge.org/projects/${shortId}</url>
 
   <properties>
-    <mule.version>3.0.0</mule.version>
+    <mule.version>3.0.1</mule.version>
     <jinterface.version>1.5.1</jinterface.version>
     <activemq.version>5.3.0</activemq.version>
     <!-- Tools properties -->
