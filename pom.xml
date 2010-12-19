@@ -11,6 +11,7 @@
 
   <properties>
     <mule.version>3.1.0-SNAPSHOT</mule.version>
+    <spring.version>3.0.3.RELEASE</spring.version>
     <jinterface.version>1.5.1</jinterface.version>
     <activemq.version>5.3.0</activemq.version>
     <!-- Tools properties -->
@@ -289,6 +290,12 @@
       <groupId>org.mule.modules</groupId>
       <artifactId>mule-module-spring-config</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
       <scope>provided</scope>
     </dependency>
 
