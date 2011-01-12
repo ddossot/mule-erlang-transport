@@ -5,7 +5,7 @@
   <artifactId>mule-transport-erlang</artifactId>
   <packaging>jar</packaging>
   <name>Mule Erlang Transport</name>
-  <version>3.1.0-SNAPSHOT</version>
+  <version>3.1.0</version>
   <description>Connects to Erlang nodes.</description>
   <url>http://www.muleforge.org/projects/${shortId}</url>
 
@@ -368,9 +368,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.muleforge.org/erlang/</connection>
-    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/</developerConnection>
-    <url>http://svn.erlang.muleforge.org/</url>
+    <connection>scm:svn:http://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</connection>
+    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</developerConnection>
+    <url>http://svn.erlang.muleforge.org/tags/mule-transport-erlang-3.1.0</url>
   </scm>
 
   <ciManagement>
