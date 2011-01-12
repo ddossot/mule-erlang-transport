@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mule.transports</groupId>
   <artifactId>mule-transport-erlang</artifactId>
   <packaging>jar</packaging>
   <name>Mule Erlang Transport</name>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.1.0</version>
   <description>Connects to Erlang nodes.</description>
   <url>http://www.muleforge.org/projects/${shortId}</url>
 
   <properties>
-    <mule.version>3.0.0</mule.version>
+    <mule.version>3.1.0</mule.version>
+    <spring.version>3.0.3.RELEASE</spring.version>
     <jinterface.version>1.5.1</jinterface.version>
     <activemq.version>5.3.0</activemq.version>
     <!-- Tools properties -->
@@ -151,9 +149,8 @@
           </plugin>
 
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>failsafe-maven-plugin</artifactId>
-            <version>2.4.3-alpha-1</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
             <executions>
               <execution>
                 <id>integration-test</id>
@@ -284,6 +281,7 @@
       <groupId>org.mule</groupId>
       <artifactId>mule-core</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Xml configuration -->
@@ -291,6 +289,13 @@
       <groupId>org.mule.modules</groupId>
       <artifactId>mule-module-spring-config</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Mule Transports -->
@@ -298,16 +303,19 @@
       <groupId>org.mule.transports</groupId>
       <artifactId>mule-transport-vm</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mule.transports</groupId>
       <artifactId>mule-transport-stdio</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mule.transports</groupId>
       <artifactId>mule-transport-jms</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Mule Modules -->
@@ -315,6 +323,7 @@
       <groupId>org.mule.modules</groupId>
       <artifactId>mule-module-client</artifactId>
       <version>${mule.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Erlang dependencies -->
@@ -359,10 +368,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.muleforge.org/erlang/</connection>
-    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://svn.erlang.muleforge.org/</url>
+    <connection>scm:svn:http://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</connection>
+    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</developerConnection>
+    <url>http://svn.erlang.muleforge.org/tags/mule-transport-erlang-3.1.0</url>
   </scm>
 
   <ciManagement>
