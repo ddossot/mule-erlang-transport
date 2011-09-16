@@ -16,7 +16,7 @@ import org.mule.tck.AbstractMuleTestCase;
 public class ErlangConnectorFactoryTestCase extends AbstractMuleTestCase {
 
     public void testCreateFromFactory() throws Exception {
-        final InboundEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(getEndpointURI());
+        final InboundEndpoint endpoint = muleContext.getEndpointFactory().getInboundEndpoint(getEndpointURI());
         assertNotNull(endpoint);
         assertNotNull(endpoint.getConnector());
         assertTrue(endpoint.getConnector() instanceof ErlangConnector);

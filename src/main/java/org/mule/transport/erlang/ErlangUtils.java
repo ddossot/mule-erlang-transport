@@ -1,8 +1,9 @@
 package org.mule.transport.erlang;
 
+import java.net.URI;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.erlang.i18n.ErlangMessages;
 
@@ -18,23 +19,23 @@ public abstract class ErlangUtils {
         throw new UnsupportedOperationException("do not instantiate");
     }
 
-    public static String getErlangNodeName(final EndpointURI euri) {
-        final String user = euri.getUser();
-        final String host = euri.getHost();
+    public static String getErlangNodeName(final URI uri) {
+        final String userInfo = uri.getUserInfo();
+        final String host = uri.getHost();
 
-        if (user == null) {
+        if (userInfo == null) {
             return host;
         }
 
-        return user + "@" + host;
+        return userInfo + "@" + host;
     }
 
-    public static String getProcessName(final EndpointURI euri) {
-        return StringUtils.stripStart(euri.getPath(), "/");
+    public static String getProcessName(final URI uri) {
+        return StringUtils.stripStart(uri.getPath(), "/");
     }
 
-    public static String getModuleFunction(final EndpointURI endpointURI) {
-        return getProcessName(endpointURI);
+    public static String getModuleFunction(final URI uri) {
+        return getProcessName(uri);
     }
 
     public static ErlangOutboundInvocation.InvocationType getInvocationType(final ImmutableEndpoint ie) {

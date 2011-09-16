@@ -43,7 +43,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
         failIfTimeout = ErlangUtils.isFailIfTimeout(endpoint);
 
         final EndpointURI endpointURI = endpoint.getEndpointURI();
-        targetNodeName = ErlangUtils.getErlangNodeName(endpointURI);
+        targetNodeName = ErlangUtils.getErlangNodeName(endpointURI.getUri());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     }
 
     private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception {
-        return new ErlangOutboundInvocation(event, otpMbox, invocationType, failIfTimeout).call();
+        return new ErlangOutboundInvocation((OutboundEndpoint) endpoint, event, otpMbox, invocationType, failIfTimeout).call();
     }
 
     public OtpErlangPid getPid() {

@@ -10,6 +10,8 @@
 
 package org.mule.transport.erlang;
 
+import junit.framework.Assert;
+
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractConnectorTestCase;
 import org.mule.transport.erlang.transformers.ErlangConversionUtils;
@@ -42,8 +44,8 @@ public class ErlangConnectorTestCase extends AbstractConnectorTestCase {
 
     public void testProperties() throws Exception {
         final ErlangConnector erlangConnector = (ErlangConnector) getConnector();
-        assertEquals("TestErlangNode", erlangConnector.getNodeName());
-        assertEquals("TestCookie", erlangConnector.getCookie());
+        Assert.assertEquals("TestErlangNode", erlangConnector.getNodeName());
+        Assert.assertEquals("TestCookie", erlangConnector.getCookie());
     }
 
     @Override
