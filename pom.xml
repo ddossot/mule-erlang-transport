@@ -333,9 +333,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</connection>
-    <developerConnection>scm:svn:https://svn.muleforge.org/erlang/tags/mule-transport-erlang-3.1.0</developerConnection>
-    <url>http://svn.erlang.muleforge.org/tags/mule-transport-erlang-3.1.0</url>
+    <connection>scm:svn:git://github.com/ddossot/mule-erlang-transport.git</connection>
+    <developerConnection>scm:svn:git@github.com:ddossot/mule-erlang-transport.git</developerConnection>
+    <url>https://github.com/ddossot/mule-erlang-transport</url>
   </scm>
 
   <ciManagement>
