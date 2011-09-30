@@ -333,8 +333,8 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:git://github.com/ddossot/mule-erlang-transport.git</connection>
-    <developerConnection>scm:svn:git@github.com:ddossot/mule-erlang-transport.git</developerConnection>
+    <connection>scm:git:git://github.com/ddossot/mule-erlang-transport.git</connection>
+    <developerConnection>scm:git:git@github.com:ddossot/mule-erlang-transport.git</developerConnection>
     <url>https://github.com/ddossot/mule-erlang-transport</url>
   </scm>
 
