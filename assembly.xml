@@ -8,7 +8,6 @@
     -->
     <id>mule-transport-erlang</id>
     <formats>
-        <format>tar.gz</format>
         <format>zip</format>
     </formats>
     <fileSets>
