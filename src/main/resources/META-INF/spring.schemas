@@ -1,1 +1,2 @@
-http\://dist.muleforge.org/erlang/schema/3.2/mule-erlang.xsd=META-INF/mule-erlang.xsd
+http\://www.mulesoft.org/schema/mule/erlang/3.3/mule-erlang.xsd=META-INF/mule-erlang.xsd
+http\://www.mulesoft.org/schema/mule/erlang/current/mule-erlang.xsd=META-INF/mule-erlang.xsd

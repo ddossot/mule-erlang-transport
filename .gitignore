@@ -4,3 +4,4 @@ target/
 .project
 .settings/
 *.beam
+erl_crash.dump

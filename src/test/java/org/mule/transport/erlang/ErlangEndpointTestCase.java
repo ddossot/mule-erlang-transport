@@ -10,14 +10,21 @@
 
 package org.mule.transport.erlang;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.endpoint.MuleEndpointURI;
-import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
-public class ErlangEndpointTestCase extends AbstractMuleTestCase {
-
-    public void testValidEndpointUriWithHostname() throws Exception {
-        final EndpointURI endpointUri = new MuleEndpointURI("erlang://nodeName@hostName/processName", muleContext);
+public class ErlangEndpointTestCase extends AbstractMuleContextTestCase
+{
+    @Test
+    public void testValidEndpointUriWithHostname() throws Exception
+    {
+        final EndpointURI endpointUri = new MuleEndpointURI("erlang://nodeName@hostName/processName",
+            muleContext);
         endpointUri.initialise();
         assertEquals("erlang://hostName/processName", endpointUri.getAddress());
         assertEquals("erlang", endpointUri.getScheme());
@@ -26,7 +33,9 @@ public class ErlangEndpointTestCase extends AbstractMuleTestCase {
         assertEquals("/processName", endpointUri.getPath());
     }
 
-    public void testValidLocalEndpointUri() throws Exception {
+    @Test
+    public void testValidLocalEndpointUri() throws Exception
+    {
         final EndpointURI endpointUri = new MuleEndpointURI("erlang://nodeName/processName", muleContext);
         endpointUri.initialise();
         assertEquals("erlang://nodeName/processName", endpointUri.getAddress());
@@ -35,5 +44,4 @@ public class ErlangEndpointTestCase extends AbstractMuleTestCase {
         assertNull(endpointUri.getUser());
         assertEquals("/processName", endpointUri.getPath());
     }
-
 }

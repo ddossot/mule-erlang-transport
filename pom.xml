@@ -1,20 +1,23 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.mule.transports</groupId>
+        <artifactId>mule-transports</artifactId>
+        <version>3.3.0</version>
+    </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.mule.transports</groupId>
     <artifactId>mule-transport-erlang</artifactId>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Mule Erlang Transport</name>
-    <version>3.2.1-SNAPSHOT</version>
     <description>Connects to Erlang nodes.</description>
     <url>http://www.muleforge.org/projects/${shortId}</url>
 
     <properties>
-        <mule.version>3.2.0</mule.version>
-        <spring.version>3.0.5.RELEASE</spring.version>
-        <jinterface.version>1.5.1</jinterface.version>
-        <activemq.version>5.3.0</activemq.version>
-        <jdk.version>1.5</jdk.version>
+        <jinterface.version>1.5.6</jinterface.version>
+        <activemq.version>5.6.0</activemq.version>
+        <jdk.version>1.6</jdk.version>
     </properties>
 
     <build>
@@ -105,6 +108,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
+                                    <workingDirectory>src/it/erlang</workingDirectory>
                                     <executable>src/it/erlang/test_server_ctl.erl</executable>
                                     <arguments>
                                         <argument>stop</argument>
@@ -154,7 +158,7 @@
                 <configuration>
                     <configLocation>
                         http://www.muleforge.org/download/checkstyle.xml
-          </configLocation>
+                    </configLocation>
                 </configuration>
             </plugin>
             <plugin>
@@ -209,94 +213,100 @@
         </plugins>
     </reporting>
 
-  <!-- Mule Dependencies -->
+    <!-- Mule Dependencies -->
     <dependencies>
-    <!-- Mule Modules: You will need to add and remove as necessary -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
-
-    <!-- Xml configuration -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-config</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
 
-    <!-- Mule Transports -->
+        <!-- Mule Transports -->
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-stdio</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jms</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
 
-    <!-- Mule Modules -->
+        <!-- Mule Modules -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-client</artifactId>
-            <version>${mule.version}</version>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
 
-    <!-- Erlang dependencies -->
+        <!-- Erlang dependencies -->
         <dependency>
-            <groupId>com.ericsson</groupId>
+            <groupId>org.erlang.otp</groupId>
             <artifactId>jinterface</artifactId>
-            <version>${jinterface.version}</version>
-            <classifier>jdk-${jdk.version}</classifier>
+            <version>1.5.6</version>
         </dependency>
 
-    <!-- For testing -->
+        <!-- For testing -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>${activemq.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jms_1.1_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.fusesource.fuse-extra</groupId>
+                    <artifactId>fusemq-leveldb</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-functional</artifactId>
-            <version>${mule.version}</version>
             <scope>test</scope>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
-  <!-- Mule Forge Configuration -->
+    <!-- Mule Forge Configuration -->
     <issueManagement>
         <system>Jira</system>
         <url>http://www.mulesource.org/jira/browse/ERLANG</url>
@@ -328,7 +338,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-  <!-- End of MuleForge Configuration -->
+    <!-- End of MuleForge Configuration -->
     <repositories>
         <repository>
             <id>muleforge-repo</id>
@@ -336,7 +346,6 @@
             <url>http://repository.muleforge.org</url>
             <layout>default</layout>
         </repository>
-
         <repository>
             <id>codehaus-repo</id>
             <name>Codehaus Repository</name>
@@ -344,11 +353,10 @@
             <layout>default</layout>
         </repository>
         <repository>
-      <!--
-        local repository for this forge project. Users can upload dependencies here when the artifact is not available on any
-        other repository. Its the users' responsibility to make sure that no licenses are violated by uploading dependencies to
-        this location
-      -->
+            <!-- local repository for this forge project. Users can upload 
+                dependencies here when the artifact is not available on any other repository. 
+                Its the users' responsibility to make sure that no licenses are violated 
+                by uploading dependencies to this location -->
             <id>erlang-deps</id>
             <name>Erlang Dependencies</name>
             <url>http://dist.muleforge.org/erlang/dependencies/maven2</url>

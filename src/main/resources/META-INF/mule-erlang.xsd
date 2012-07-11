@@ -1,164 +1,195 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns="http://www.mulesoft.org/schema/mule/erlang" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:schemadoc="http://www.mulesoft.org/schema/mule/schemadoc"
-  targetNamespace="http://www.mulesoft.org/schema/mule/erlang" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema xmlns="http://www.mulesoft.org/schema/mule/erlang"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+    xmlns:schemadoc="http://www.mulesoft.org/schema/mule/schemadoc"
+    targetNamespace="http://www.mulesoft.org/schema/mule/erlang"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-  <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-  <xsd:import namespace="http://www.mulesoft.org/schema/mule/core" schemaLocation="http://www.mulesoft.org/schema/mule/core/3.2/mule.xsd" />
-  <xsd:import namespace="http://www.mulesoft.org/schema/mule/schemadoc" schemaLocation="http://www.mulesoft.org/schema/mule/schemadoc/3.2/mule-schemadoc.xsd" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.mulesoft.org/schema/mule/core"
+        schemaLocation="http://www.mulesoft.org/schema/mule/core/3.3/mule.xsd" />
+    <xsd:import namespace="http://www.mulesoft.org/schema/mule/schemadoc"
+        schemaLocation="http://www.mulesoft.org/schema/mule/schemadoc/3.3/mule-schemadoc.xsd" />
 
-  <xsd:annotation>
-    <xsd:documentation>Connects to Erlang nodes.</xsd:documentation>
-    <xsd:appinfo>
-      <schemadoc:short-name>Erlang</schemadoc:short-name>
-      <schemadoc:page-title>Erlang Transport</schemadoc:page-title>
-      <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="true"
-        requestEvents="true" transactions="false" streaming="false">
-        <schemadoc:inboundMEPs in-only="${receiver}" in-optional-out="true" in-out="true" />
-        <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true" />
-      </schemadoc:transport-features>
-    </xsd:appinfo>
-  </xsd:annotation>
-
-  <xsd:element name="connector" type="erlangConnectorType" substitutionGroup="mule:abstract-connector">
     <xsd:annotation>
-      <xsd:documentation>
-        Connects to Erlang nodes.
-            </xsd:documentation>
+        <xsd:documentation>Connects to Erlang nodes.</xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>Erlang</schemadoc:short-name>
+            <schemadoc:page-title>Erlang Transport
+            </schemadoc:page-title>
+            <schemadoc:transport-features
+                receiveEvents="true" dispatchEvents="false"
+                responseEvents="true" requestEvents="true" transactions="false"
+                streaming="false">
+                <schemadoc:inboundMEPs in-only="${receiver}"
+                    in-optional-out="true" in-out="true" />
+                <schemadoc:outboundMEPs out-only="true"
+                    out-in="true" out-optional-in="true" />
+            </schemadoc:transport-features>
+        </xsd:appinfo>
     </xsd:annotation>
-  </xsd:element>
 
-  <xsd:complexType name="erlangConnectorType">
-    <xsd:complexContent>
-      <xsd:extension base="mule:connectorType">
-        <xsd:attribute name="nodeName" type="mule:substitutableName" use="required">
-          <xsd:annotation>
+    <xsd:element name="connector" type="erlangConnectorType"
+        substitutionGroup="mule:abstract-connector">
+        <xsd:annotation>
             <xsd:documentation>
-              The name of the Erlang node that this connector will create within Mule.
+                Connects to Erlang nodes.
             </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="cookie" type="xsd:string" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>
-              The authorization cookie that will be used by this connector's node when it communicates with
-              other nodes.
-            </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="port" type="mule:substitutablePortNumber" default="0" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>
-              The port number you wish to use for incoming connections. Specifying 0 lets the system choose an
-              available port.
-            </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+        </xsd:annotation>
+    </xsd:element>
 
-  <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint" />
-  <xsd:complexType name="inboundEndpointType">
-    <xsd:complexContent>
-      <xsd:extension base="mule:inboundEndpointType">
-        <xsd:attributeGroup ref="addressAttributes" />
-        <xsd:attributeGroup ref="propertyAttributes" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+    <xsd:complexType name="erlangConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:connectorType">
+                <xsd:attribute name="nodeName"
+                    type="mule:substitutableName" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The name of the Erlang node that this connector will create within
+                            Mule.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="cookie" type="xsd:string"
+                    use="optional">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The authorization cookie that will be used by this connector's node
+                            when it communicates with
+                            other nodes.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="port"
+                    type="mule:substitutablePortNumber" default="0"
+                    use="optional">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The port number you wish to use for incoming connections. Specifying
+                            0 lets the system choose an
+                            available port.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-  <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint" />
-  <xsd:complexType name="outboundEndpointType">
-    <xsd:complexContent>
-      <xsd:extension base="mule:outboundEndpointType">
-        <xsd:attributeGroup ref="addressAttributes" />
-        <xsd:attributeGroup ref="propertyAttributes" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType"
+        substitutionGroup="mule:abstract-inbound-endpoint" />
+    <xsd:complexType name="inboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:inboundEndpointType">
+                <xsd:attributeGroup ref="addressAttributes" />
+                <xsd:attributeGroup ref="propertyAttributes" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-  <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint" />
-  <xsd:complexType name="globalEndpointType">
-    <xsd:complexContent>
-      <xsd:extension base="mule:globalEndpointType">
-        <xsd:attributeGroup ref="addressAttributes" />
-        <xsd:attributeGroup ref="propertyAttributes" />
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
+    <xsd:element name="outbound-endpoint" type="outboundEndpointType"
+        substitutionGroup="mule:abstract-outbound-endpoint" />
+    <xsd:complexType name="outboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:outboundEndpointType">
+                <xsd:attributeGroup ref="addressAttributes" />
+                <xsd:attributeGroup ref="propertyAttributes" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-  <xsd:attributeGroup name="addressAttributes">
-    <xsd:attribute name="node" type="xsd:string" default="connector.nodeName">
-      <xsd:annotation>
-        <xsd:documentation>
-          An Erlang node descriptor (typically: "nodeName@nodeHost").
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="processName" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>
-          An Erlang process name.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="moduleFunction" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>
-          An Erlang module and function as "module:function" (for example: "erlang:node").
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-  </xsd:attributeGroup>
+    <xsd:element name="endpoint" type="globalEndpointType"
+        substitutionGroup="mule:abstract-global-endpoint" />
+    <xsd:complexType name="globalEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:globalEndpointType">
+                <xsd:attributeGroup ref="addressAttributes" />
+                <xsd:attributeGroup ref="propertyAttributes" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
-  <xsd:attributeGroup name="propertyAttributes">
-    <xsd:attribute name="invocationType" default="PID_WRAPPED">
-      <xsd:annotation>
-        <xsd:documentation>
-          The type of invocation used to contact the target process.
-        </xsd:documentation>
-      </xsd:annotation>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="RAW" />
-          <xsd:enumeration value="PID_WRAPPED">
+    <xsd:attributeGroup name="addressAttributes">
+        <xsd:attribute name="node" type="xsd:string"
+            default="connector.nodeName">
             <xsd:annotation>
-              <xsd:documentation>Wraps the current payload like this: {SenderPid, Payload}</xsd:documentation>
+                <xsd:documentation>
+                    An Erlang node descriptor (typically: "nodeName@nodeHost").
+                </xsd:documentation>
             </xsd:annotation>
-          </xsd:enumeration>
-          <xsd:enumeration value="GEN_CALL" />
-          <xsd:enumeration value="GEN_CAST" />
-          <xsd:enumeration value="RPC" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:attribute>
+        </xsd:attribute>
+        <xsd:attribute name="processName" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    An Erlang process name.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="moduleFunction" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    An Erlang module and function as "module:function" (for example:
+                    "erlang:node").
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
 
-    <xsd:attribute name="failIfTimeout" type="mule:substitutableBoolean" default="false">
-      <xsd:annotation>
-        <xsd:documentation>
-          Defines if a send operation should fail if the response didn't come in time.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-  </xsd:attributeGroup>
+    <xsd:attributeGroup name="propertyAttributes">
+        <xsd:attribute name="invocationType" default="PID_WRAPPED">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The type of invocation used to contact the target process.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="RAW" />
+                    <xsd:enumeration value="PID_WRAPPED">
+                        <xsd:annotation>
+                            <xsd:documentation>Wraps the current payload
+                                like this: {SenderPid, Payload}
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="GEN_CALL" />
+                    <xsd:enumeration value="GEN_CAST" />
+                    <xsd:enumeration value="RPC" />
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+
+        <xsd:attribute name="failIfTimeout" type="mule:substitutableBoolean"
+            default="false">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Defines if a send operation should fail if the response didn't come in
+                    time.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
 
 
-  <!-- Transformers -->
-  <xsd:element name="object-to-erlang-message-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
-      <xsd:annotation>
-          <xsd:documentation>
-              The object-erlang-message-transformer element configures a transformer that converts a Java object into an Erlang message. 
-          </xsd:documentation>
-      </xsd:annotation>
-  </xsd:element>
+    <!-- Transformers -->
+    <xsd:element name="object-to-erlang-message-transformer"
+        type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                The object-erlang-message-transformer element configures a transformer
+                that converts a Java object into an Erlang message.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
-  <xsd:element name="erlang-message-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
-      <xsd:annotation>
-          <xsd:documentation>
-              The erlang-message-to-object-transformer element configures a transformer that converts an Erlang message into a Java object. 
-          </xsd:documentation>
-      </xsd:annotation>
-  </xsd:element>
+    <xsd:element name="erlang-message-to-object-transformer"
+        type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                The erlang-message-to-object-transformer element configures a
+                transformer that converts an Erlang message into a Java
+                object.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
 </xsd:schema>
