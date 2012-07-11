@@ -23,10 +23,11 @@ Maven Support
 
 Add the following repository:
 
-    <repository> 
-      <id>muleforge</id> 
-      <name>MuleForge Repository</name> 
-      <url>http://repository.muleforge.org</url> 
+    <repository>
+      <id>muleforge-repo</id>
+      <name>MuleForge Repository</name>
+      <url>https://repository.mulesoft.org/nexus/content/repositories/releases</url>
+      <layout>default</layout>
     </repository>
 
 To add the Mule Erlang transport to a Maven project add the following dependency:
