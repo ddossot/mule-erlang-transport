@@ -2,16 +2,16 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mule-transport-erlang</artifactId>
-    <version>3.3.0.1-SNAPSHOT</version>
+    <version>3.4.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Mule Erlang Transport</name>
     <description>Connects to Erlang nodes.</description>
-    <url>http://www.muleforge.org/projects/${shortId}</url>
+    <url>https://github.com/ddossot/mule-erlang-transport</url>
 
     <properties>
         <jinterface.version>1.5.6</jinterface.version>
@@ -292,11 +292,6 @@
             <artifactId>mule-tests-functional</artifactId>
             <scope>test</scope>
             <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
