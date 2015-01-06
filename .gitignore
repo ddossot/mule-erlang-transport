@@ -5,3 +5,5 @@ target/
 .settings/
 *.beam
 erl_crash.dump
+.mule/
+

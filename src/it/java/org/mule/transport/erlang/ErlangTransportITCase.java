@@ -43,6 +43,11 @@ public class ErlangTransportITCase extends FunctionalTestCase
         System.setProperty("host.name", InetAddress.getLocalHost().getHostName());
     }
 
+    public ErlangTransportITCase()
+    {
+        setDisposeContextPerClass(true);
+    }
+
     @Override
     protected void doSetUp() throws Exception
     {
