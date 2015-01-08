@@ -2,7 +2,16 @@
 
 A transport that can send and receive messages to and from Erlang nodes.
 
-Read the [documentation](http://www.mulesoft.org/erlang-transport).
+## Pre-requisite
+
+Erlang R13B01 or better must be installed on the host where you want to use this transport.
+
+## Before using the Erlang transport
+
+[epmd](https://web.archive.org/web/20120818125617/http://www.erlang.org/doc/man/epmd.html) must be running before starting the Erlang connector.
+
+If you have an Erlang application already running on the host where Mule will run, `epmd` will be running already. Otherwise, you'll need to start it by hand.
+For this, use the startup command that is appropriate to your environment (for example, [for Linux](https://web.archive.org/web/20120818125617/http://linux.die.net/man/1/epmd)).
 
 ## Build
 
@@ -10,11 +19,11 @@ Run:
 
     mvn clean install
 
-
 Integration tests:
 
     mvn -Pit clean verify
 
+Erlang Escripts must be executable on your platorm for the integration tests to run.
 
 ## Maven Support
 
@@ -39,5 +48,14 @@ Only versions `3.2.0` and `3.3.0` are available there. Currently, snapshots of m
 
 Future releases will be done to Maven central, since Mulesoft has abandonned Muleforge, the platform where this transport was hosted and built. Please create an issue if you need a release to be done.
 
+# Using the Erlang transport
+## Connector configuration
+### Basic configuration
 
+    <erlang:connector cookie="mule_test_cookie" name="ErlangConnector" nodename="MuleIT" />
 
+With this configuration, Mule will be accessible from remote Erlang nodes as if it was an Erlang node started this way:
+
+    erl -sname MuleIT -setcookie mule_test_cookie
+
+You can host several of such connectors in a single Mule instance.
