@@ -101,3 +101,28 @@ receive(M) M end.
 
 "Hello World"
 ```
+
+###For One-Way services
+```xml
+<bridge exchange-pattern="one-way" name="ErlangOneWayService">
+  <erlang:inbound-endpoint processname="jms_bridge">
+    <jms:outbound-endpoint queue="erlang.it.queue" />
+  </erlang:inbound-endpoint>
+</bridge>
+```
+
+The above service can be invoked as if it is a pure OTP gen_server:
+
+```erlang
+gen_server:cast({jms_bridge, 'MuleIT@ddossot-laptop'}, "Lorem ipsum").
+
+ok
+```
+
+The Erlang transport also understands raw calls:
+
+```erlang
+{jms_bridge, 'MuleIT@ddossot-laptop'} ! "Lorem ipsum".
+```
+
+In both cases, a JMS TextMessage has been generated from the Erlang call!
