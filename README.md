@@ -126,3 +126,59 @@ The Erlang transport also understands raw calls:
 ```
 
 In both cases, a JMS TextMessage has been generated from the Erlang call!
+
+##Outbound endpoint configuration
+###For gen_server calls
+
+```xml
+<erlang:outbound-endpoint
+        exchange-pattern="request-response"
+        failiftimeout="true"
+        invocationtype="GEN_CALL"
+        node="nodeName@hostName"
+        processname="... gen_server name ..." />
+```
+
+###For gen_server casts
+
+```xml
+<erlang:outbound-endpoint
+        invocationtype="GEN_CAST"
+        node="nodeName@hostName"
+        processname="... gen_server name ..." /> 
+```
+
+###For PID wrapped calls
+
+In this kind of calls, the payload is wrapped in a tuple with the PID of the calling process as the first element. This allows the remote process to send a response back.
+
+```xml
+<erlang:outbound-endpoint
+        exchange-pattern="request-response"
+        invocationtype="PID_WRAPPED"
+        node="nodeName@hostName"
+        processname="...registered process name ..." />
+```
+
+### For raw calls
+
+In this kind of calls, the payload is sent as is to the remote process.
+
+```xml
+<erlang:outbound-endpoint
+        invocationtype="RAW"
+        node="nodeName@hostName"
+        processname="...registered process name ..." />
+```
+
+###For RPC calls
+
+Allows the invocation of a module:function on a target node, using the current message as the arguments.
+
+```xml
+<erlang:outbound-endpoint
+        exchange-pattern="request-response"
+        invocationtype="RPC" 
+        modulefunction="module:function"
+        node="nodeName@hostName" />
+```
