@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/ddossot/mule-erlang-transport/master/mule-erlang.png" alt="Mule Erlang Logo" />
+<img src="https://raw.githubusercontent.com/ddossot/mule-erlang-transport/mule-3.x/mule-erlang.png" alt="Mule Erlang Logo" />
 </p>
 
 # Mule Erlang Transport
