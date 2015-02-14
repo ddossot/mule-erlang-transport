@@ -6,4 +6,8 @@ install:
 
 language: java
 
+branches:
+  only:
+    - mule-3.x
+
 script: mvn -Pit verify
