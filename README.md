@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/ddossot/mule-erlang-transport/master/mule-erlang.png" alt="Mule Erlang Logo" />
+</p>
+
 # Mule Erlang Transport
 
 A transport that can send and receive messages to and from Erlang nodes.
