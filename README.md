@@ -4,6 +4,8 @@
 
 # Mule Erlang Transport
 
+[![Build Status](https://travis-ci.org/ddossot/mule-erlang-transport.svg)](https://travis-ci.org/ddossot/mule-erlang-transport)
+
 A transport that can send and receive messages to and from Erlang nodes.
 
 ## Pre-requisite
