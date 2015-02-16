@@ -1,5 +1,5 @@
 #!/usr/bin/env escript
-%%! -sname mule_test_server_node@localhost -setcookie mule_test_cookie -detached
+%%! -sname mule_test_server_node -setcookie mule_test_cookie -detached
 
 main(_) ->
   compile:file("test_gen_server.erl"),
@@ -36,5 +36,5 @@ loop(State) ->
   end.
 
 mule_node() ->
-  list_to_atom("MuleIT@localhost").
+  list_to_atom("MuleIT@" ++ net_adm:localhost()).
 
