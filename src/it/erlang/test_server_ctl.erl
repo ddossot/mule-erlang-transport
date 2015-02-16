@@ -1,5 +1,5 @@
 #!/usr/bin/env escript
-%%! -sname mule_test_server_node_ctl -setcookie mule_test_cookie
+%%! -sname mule_test_server_node_ctl@localhost -setcookie mule_test_cookie
 
 main(["test_send"]) -> test_send();
 main(["test_gs_cast"]) -> test_gs_cast();
@@ -46,5 +46,5 @@ test_gs_call() ->
   end.
 
 server_node() ->
-  list_to_atom("mule_test_server_node@" ++ net_adm:localhost()).
+  list_to_atom("mule_test_server_node@localhost").
 
