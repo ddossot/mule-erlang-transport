@@ -106,7 +106,7 @@
                                 </goals>
                                 <configuration>
                                     <workingDirectory>src/it/erlang</workingDirectory>
-                                    <executable>src/it/erlang/test_server.erl</executable>
+                                    <executable>src/it/erlang/start.sh</executable>
                                 </configuration>
                             </execution>
                             <execution>
@@ -117,7 +117,7 @@
                                 </goals>
                                 <configuration>
                                     <workingDirectory>src/it/erlang</workingDirectory>
-                                    <executable>src/it/erlang/test_server_ctl.erl</executable>
+                                    <executable>src/it/erlang/stop.sh</executable>
                                     <arguments>
                                         <argument>stop</argument>
                                     </arguments>

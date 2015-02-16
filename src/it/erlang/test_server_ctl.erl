@@ -27,7 +27,7 @@ test_send() ->
   erlang:send({mule_test_server, server_node()}, {self(), testing}),
 
   receive
-    {_Pid, {ack, testing}} -> io:format("send ok~n"), halt(0)
+    {_Pid, {raw_ack, testing, _State}} -> io:format("send ok~n"), halt(0)
   after
     1000 -> halt(1)
   end.
@@ -40,7 +40,7 @@ test_gs_cast() ->
 
 test_gs_call() ->
   case gen_server:call({mule_test_gen_server, server_node()}, gs_call) of
-    {ack, gs_call, State} -> io:format("gen_server call ok with state: ~p~n", [State]), halt(0);
+    {gs_ack, gs_call, State} -> io:format("gen_server call ok with state: ~p~n", [State]), halt(0);
     _ -> halt(1)
   end.
 
