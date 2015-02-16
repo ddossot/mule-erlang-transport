@@ -2,6 +2,8 @@
 
 echo "Starting Erlang test servers"
 
+./test_server_ctl.erl info
+
 ./test_server.erl
 
 for (( i=1; i <= 10; i++ ))

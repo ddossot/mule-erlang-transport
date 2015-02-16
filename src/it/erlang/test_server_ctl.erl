@@ -5,6 +5,7 @@ main(["test_send"]) -> test_send();
 main(["test_gs_cast"]) -> test_gs_cast();
 main(["test_gs_call"]) -> test_gs_call();
 main(["stop"]) -> stop();
+main(["info"]) -> io:format("Node: ~p Cookie: ~p~n", [node(), erlang:get_cookie()]);
 main(_) -> usage().
 
 usage() ->
