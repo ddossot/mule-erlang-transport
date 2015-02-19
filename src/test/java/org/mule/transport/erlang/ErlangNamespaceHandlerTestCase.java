@@ -27,6 +27,7 @@ import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
+@SuppressWarnings("deprecation")
 public class ErlangNamespaceHandlerTestCase extends FunctionalTestCase
 {
     public ErlangNamespaceHandlerTestCase()

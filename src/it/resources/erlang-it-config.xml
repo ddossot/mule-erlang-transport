@@ -16,7 +16,7 @@
                           specification="1.1" />
 
   <erlang:connector name="ErlangConnector" nodeName="MuleIT" cookie="mule_test_cookie" />
-  
+
   <bridge name="RawTest" exchange-pattern="one-way">
     <vm:inbound-endpoint path="RawTest.IN" />
     <erlang:outbound-endpoint node="mule_test_server_node@${host.name}"

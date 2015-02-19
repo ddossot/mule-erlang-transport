@@ -1,11 +1,12 @@
-#!/usr/bin/env escript
-%%! -sname mule_test_server_node_ctl -setcookie mule_test_cookie
+-module(test_server_ctl).
 
-main(["test_send"]) -> test_send();
-main(["test_gs_cast"]) -> test_gs_cast();
-main(["test_gs_call"]) -> test_gs_call();
-main(["stop"]) -> stop();
-main(["info"]) -> io:format("Node: ~p Cookie: ~p~n", [node(), erlang:get_cookie()]);
+-export([main/1]).
+
+main([test_send]) -> test_send();
+main([test_gs_cast]) -> test_gs_cast();
+main([test_gs_call]) -> test_gs_call();
+main([stop]) -> stop();
+main([info]) -> io:format("Node: ~p Cookie: ~p Server Node: ~p~n", [node(), erlang:get_cookie(), server_node()]), halt(0);
 main(_) -> usage().
 
 usage() ->
@@ -13,6 +14,7 @@ usage() ->
   io:format("       test_server_ctl test_send~n"),
   io:format("       test_server_ctl test_gs_cast~n"),
   io:format("       test_server_ctl test_gs_call~n"),
+  io:format("       test_server_ctl info~n"),
   halt(1).
 
 stop() ->
@@ -46,5 +48,6 @@ test_gs_call() ->
   end.
 
 server_node() ->
-  list_to_atom("mule_test_server_node@" ++ net_adm:localhost()).
-
+  N = atom_to_list(node()),
+  Host = lists:nth(2, string:tokens(N, "@")),
+  list_to_atom("mule_test_server_node@" ++ Host).

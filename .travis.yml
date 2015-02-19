@@ -1,13 +1,4 @@
-addons:
-  hosts:
-    - travis-mule
-    
 install:
-  - cat /etc/hosts
-  - hostname
-  - hostname -a
-  - hostname -f
-  - hostname -s
   - wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
   - sudo dpkg -i erlang-solutions_1.0_all.deb
   - sudo apt-get update

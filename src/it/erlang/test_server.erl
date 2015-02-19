@@ -1,12 +1,14 @@
-#!/usr/bin/env escript
-%%! -sname mule_test_server_node -setcookie mule_test_cookie -detached
+-module(test_server).
 
-main(_) ->
+-export([run/0]).
+
+run() ->
   compile:file("test_gen_server.erl"),
   gen_server:start_link({local, mule_test_gen_server}, test_gen_server, [], []),
   register(mule_test_server, self()),
   io:format("test_server started~n"),
-  loop(undefined).
+  loop(undefined),
+  halt(0).
 
 loop(State) ->
   receive
@@ -36,5 +38,6 @@ loop(State) ->
   end.
 
 mule_node() ->
-  list_to_atom("MuleIT@" ++ net_adm:localhost()).
-
+  N = atom_to_list(node()),
+  Host = lists:nth(2, string:tokens(N, "@")),
+  list_to_atom("MuleIT@" ++ Host).

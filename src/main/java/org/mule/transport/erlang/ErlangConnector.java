@@ -25,7 +25,8 @@ import com.ericsson.otp.erlang.OtpNode;
 /**
  * The <code>ErlangConnector</code> supports sending to and receiving from Erlang nodes.
  */
-public class ErlangConnector extends AbstractConnector {
+public class ErlangConnector extends AbstractConnector
+{
     /* This constant defines the main transport protocol identifier */
     public static final String ERLANG = "erlang";
 
@@ -39,87 +40,112 @@ public class ErlangConnector extends AbstractConnector {
 
     private OtpNode otpNode;
 
-    public ErlangConnector(final MuleContext context) {
+    public ErlangConnector(final MuleContext context)
+    {
         super(context);
     }
 
     @Override
-    protected void doInitialise() throws InitialisationException {
+    protected void doInitialise() throws InitialisationException
+    {
         Validate.notEmpty(ErlangMessages.missingNodeName().getMessage(), nodeName);
     }
 
     @Override
-    public void doConnect() throws Exception {
-        if (port != null && !DEFAULT_PORT.equals(port)) {
-            if (cookie == null) {
+    public void doConnect() throws Exception
+    {
+        if (port != null && !DEFAULT_PORT.equals(port))
+        {
+            if (cookie == null)
+            {
                 throw new ConnectorException(ErlangMessages.missingCookieWithPort(), this);
             }
             otpNode = new OtpNode(nodeName, cookie, port);
 
-        } else {
-            if (cookie != null) {
+        }
+        else
+        {
+            if (cookie != null)
+            {
                 otpNode = new OtpNode(nodeName, cookie);
-            } else {
+            }
+            else
+            {
                 otpNode = new OtpNode(nodeName);
             }
         }
 
-        logger.info("OTP Node " + otpNode.alive() + "@" + otpNode.node() + ":" + otpNode.port() + " is ready.");
+        logger.info("OTP Node " + otpNode.alive() + " [" + otpNode.node() + ":" + otpNode.port()
+                    + "] is ready.");
     }
 
     @Override
-    protected void doStart() throws MuleException {
+    protected void doStart() throws MuleException
+    {
         // NOOP
     }
 
     @Override
-    protected void doStop() throws MuleException {
+    protected void doStop() throws MuleException
+    {
         // NOOP
     }
 
     @Override
-    public void doDisconnect() throws Exception {
+    public void doDisconnect() throws Exception
+    {
         otpNode.close();
     }
 
     @Override
-    protected void doDispose() {
+    protected void doDispose()
+    {
         otpNode = null;
     }
 
-    public OtpMbox createMailBox() {
+    public OtpMbox createMailBox()
+    {
         return otpNode.createMbox();
     }
 
-    public OtpErlangRef createRef() {
+    public OtpErlangRef createRef()
+    {
         return otpNode.createRef();
     }
 
-    public String getProtocol() {
+    @Override
+    public String getProtocol()
+    {
         return ERLANG;
     }
 
-    public String getCookie() {
+    public String getCookie()
+    {
         return cookie;
     }
 
-    public void setCookie(final String cookie) {
+    public void setCookie(final String cookie)
+    {
         this.cookie = cookie;
     }
 
-    public String getNodeName() {
+    public String getNodeName()
+    {
         return nodeName;
     }
 
-    public void setNodeName(final String nodeName) {
+    public void setNodeName(final String nodeName)
+    {
         this.nodeName = nodeName;
     }
 
-    public Integer getPort() {
+    public Integer getPort()
+    {
         return port;
     }
 
-    public void setPort(final Integer port) {
+    public void setPort(final Integer port)
+    {
         this.port = port;
     }
 
