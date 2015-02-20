@@ -10,7 +10,7 @@ branches:
   only:
     - mule-3.x
 
-script: mvn -Pit verify
+script: mvn verify
 
 after_success:
   - echo "<settings><servers><server><id>ossrh</id><username>\${env.OSSRH_USER}</username><password>\${env.OSSRH_PASS}</password></server></servers></settings>" > ~/settings.xml
