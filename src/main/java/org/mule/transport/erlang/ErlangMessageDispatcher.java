@@ -1,12 +1,3 @@
-/*
- * $Id$
- * --------------------------------------------------------------------------------------
- * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
- *
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
- */
 
 package org.mule.transport.erlang;
 
@@ -26,7 +17,8 @@ import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangPid;
 import com.ericsson.otp.erlang.OtpMbox;
 
-public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
+public class ErlangMessageDispatcher extends AbstractMessageDispatcher
+{
 
     private final ErlangConnector connector;
     private final InvocationType invocationType;
@@ -35,7 +27,8 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
 
     private OtpMbox otpMbox;
 
-    public ErlangMessageDispatcher(final OutboundEndpoint endpoint) {
+    public ErlangMessageDispatcher(final OutboundEndpoint endpoint)
+    {
         super(endpoint);
         connector = (ErlangConnector) endpoint.getConnector();
 
@@ -47,46 +40,57 @@ public class ErlangMessageDispatcher extends AbstractMessageDispatcher {
     }
 
     @Override
-    protected void doInitialise() throws InitialisationException {
-        Validate.notEmpty(targetNodeName, ErlangMessages.missingEndpointProperty("targetNodeName").getMessage());
+    protected void doInitialise() throws InitialisationException
+    {
+        Validate.notEmpty(targetNodeName, ErlangMessages.missingEndpointProperty("targetNodeName")
+            .getMessage());
         super.doInitialise();
     }
 
     @Override
-    public void doConnect() throws Exception {
+    public void doConnect() throws Exception
+    {
         otpMbox = connector.createMailBox();
 
-        if (!otpMbox.ping(targetNodeName, 1000L)) {
+        if (!otpMbox.ping(targetNodeName, 1000L))
+        {
             throw new ConnectException(ErlangMessages.nodeUnreachable(targetNodeName), this);
         }
     }
 
     @Override
-    public void doDisconnect() throws Exception {
+    public void doDisconnect() throws Exception
+    {
         otpMbox.close();
     }
 
     @Override
-    public void doDispose() {
+    public void doDispose()
+    {
         otpMbox = null;
     }
 
     @Override
-    public void doDispatch(final MuleEvent event) throws Exception {
+    public void doDispatch(final MuleEvent event) throws Exception
+    {
         doInvokeRemote(event);
     }
 
     @Override
-    public MuleMessage doSend(final MuleEvent event) throws Exception {
+    public MuleMessage doSend(final MuleEvent event) throws Exception
+    {
         final OtpErlangObject result = doInvokeRemote(event);
         return createMuleMessage(ErlangConversionUtils.erlangToJava(result));
     }
 
-    private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception {
-        return new ErlangOutboundInvocation((OutboundEndpoint) endpoint, event, otpMbox, invocationType, failIfTimeout).call();
+    private OtpErlangObject doInvokeRemote(final MuleEvent event) throws Exception
+    {
+        return new ErlangOutboundInvocation((OutboundEndpoint) endpoint, event, otpMbox, invocationType,
+            failIfTimeout).call();
     }
 
-    public OtpErlangPid getPid() {
+    public OtpErlangPid getPid()
+    {
         return otpMbox.self();
     }
 }

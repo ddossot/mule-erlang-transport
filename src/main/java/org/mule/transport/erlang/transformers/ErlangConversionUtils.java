@@ -1,3 +1,4 @@
+
 package org.mule.transport.erlang.transformers;
 
 import java.lang.reflect.Array;
@@ -25,79 +26,96 @@ import com.ericsson.otp.erlang.OtpErlangTuple;
 
 /**
  * Supporting methods for Java to Erlang conversion.
- * 
- * @author <a href="mailto:david@dossot.net">David Dossot</a>
  */
-public abstract class ErlangConversionUtils {
+public abstract class ErlangConversionUtils
+{
 
     // TODO add support for Map <-> PropList, stream/byte[] <-> Binary conversions
     // TODO document type mapping
 
-    private ErlangConversionUtils() {
+    private ErlangConversionUtils()
+    {
         throw new UnsupportedOperationException("do not instantiate");
     }
 
     /**
-     * This method comes from Erlide, the awesome Eclipse plug-in for Erlang development.
-     * 
-     * Copyright (c) 2008 Vlad Dumitrescu and others. All rights reserved. This program and the accompanying materials are made
-     * available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
-     * http://www.eclipse.org/legal/epl-v10.html
+     * This method comes from Erlide, the awesome Eclipse plug-in for Erlang development. Copyright
+     * (c) 2008 Vlad Dumitrescu and others. All rights reserved. This program and the accompanying
+     * materials are made available under the terms of the Eclipse Public License v1.0 which
+     * accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
      */
-    public static OtpErlangObject javaToErlang(final Object obj) throws IllegalArgumentException {
-        if (obj == null) {
+    public static OtpErlangObject javaToErlang(final Object obj) throws IllegalArgumentException
+    {
+        if (obj == null)
+        {
             return null;
         }
 
-        if (obj instanceof OtpErlangObject) {
+        if (obj instanceof OtpErlangObject)
+        {
             return (OtpErlangObject) obj;
         }
-        if (obj instanceof String) {
+        if (obj instanceof String)
+        {
             return new OtpErlangString((String) obj);
         }
-        if (obj instanceof Character) {
+        if (obj instanceof Character)
+        {
             return new OtpErlangChar((Character) obj);
         }
-        if (obj instanceof Byte) {
+        if (obj instanceof Byte)
+        {
             return new OtpErlangByte((Byte) obj);
         }
-        if (obj instanceof Short) {
+        if (obj instanceof Short)
+        {
             return new OtpErlangShort((Short) obj);
         }
-        if (obj instanceof Integer) {
+        if (obj instanceof Integer)
+        {
             return new OtpErlangInt((Integer) obj);
         }
-        if (obj instanceof Long) {
+        if (obj instanceof Long)
+        {
             return new OtpErlangLong((Long) obj);
         }
-        if (obj instanceof BigInteger) {
+        if (obj instanceof BigInteger)
+        {
             return new OtpErlangLong((BigInteger) obj);
         }
-        if (obj instanceof Float) {
+        if (obj instanceof Float)
+        {
             return new OtpErlangFloat((Float) obj);
         }
-        if (obj instanceof Double) {
+        if (obj instanceof Double)
+        {
             return new OtpErlangDouble((Double) obj);
         }
-        if (obj instanceof Boolean) {
+        if (obj instanceof Boolean)
+        {
             return new OtpErlangBoolean((Boolean) obj);
         }
-        if (obj instanceof byte[]) {
+        if (obj instanceof byte[])
+        {
             return new OtpErlangBinary((byte[]) obj);
         }
-        if (obj.getClass().isArray()) {
+        if (obj.getClass().isArray())
+        {
             final int length = Array.getLength(obj);
             final OtpErlangObject[] erlangObjects = new OtpErlangObject[length];
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
+            {
                 erlangObjects[i] = javaToErlang(Array.get(obj, i));
             }
             return new OtpErlangTuple(erlangObjects);
         }
-        if (obj instanceof Collection<?>) {
+        if (obj instanceof Collection<?>)
+        {
             final int size = ((Collection<?>) obj).size();
             final OtpErlangObject[] erlangObjects = new OtpErlangObject[size];
             int j = 0;
-            for (final Iterator<?> i = ((Collection<?>) obj).iterator(); i.hasNext();) {
+            for (final Iterator<?> i = ((Collection<?>) obj).iterator(); i.hasNext();)
+            {
                 erlangObjects[j++] = javaToErlang(i.next());
             }
             return new OtpErlangList(erlangObjects);
@@ -106,65 +124,86 @@ public abstract class ErlangConversionUtils {
         throw new IllegalArgumentException("Unsupported object of type: " + obj.getClass().getName());
     }
 
-    public static Object erlangToJava(final OtpErlangObject erl) throws IllegalArgumentException {
-        if (erl == null) {
+    public static Object erlangToJava(final OtpErlangObject erl) throws IllegalArgumentException
+    {
+        if (erl == null)
+        {
             return null;
         }
 
-        try {
-            if (erl instanceof OtpErlangString) {
+        try
+        {
+            if (erl instanceof OtpErlangString)
+            {
                 return ((OtpErlangString) erl).stringValue();
             }
-            if (erl instanceof OtpErlangBinary) {
+            if (erl instanceof OtpErlangBinary)
+            {
                 return ((OtpErlangBinary) erl).binaryValue();
             }
-            if (erl instanceof OtpErlangChar) {
+            if (erl instanceof OtpErlangChar)
+            {
                 return ((OtpErlangChar) erl).charValue();
             }
-            if (erl instanceof OtpErlangByte) {
+            if (erl instanceof OtpErlangByte)
+            {
                 return ((OtpErlangByte) erl).byteValue();
             }
-            if (erl instanceof OtpErlangShort) {
+            if (erl instanceof OtpErlangShort)
+            {
                 return ((OtpErlangShort) erl).shortValue();
             }
-            if (erl instanceof OtpErlangInt) {
+            if (erl instanceof OtpErlangInt)
+            {
                 return ((OtpErlangInt) erl).intValue();
             }
-            if (erl instanceof OtpErlangLong) {
+            if (erl instanceof OtpErlangLong)
+            {
                 final OtpErlangLong otpErlangLong = (OtpErlangLong) erl;
-                if (otpErlangLong.isLong()) {
+                if (otpErlangLong.isLong())
+                {
                     return otpErlangLong.longValue();
                 }
                 return otpErlangLong.bigIntegerValue();
             }
-            if (erl instanceof OtpErlangFloat) {
+            if (erl instanceof OtpErlangFloat)
+            {
                 return ((OtpErlangFloat) erl).floatValue();
             }
-            if (erl instanceof OtpErlangDouble) {
+            if (erl instanceof OtpErlangDouble)
+            {
                 return ((OtpErlangDouble) erl).doubleValue();
             }
-            if (erl instanceof OtpErlangBoolean) {
+            if (erl instanceof OtpErlangBoolean)
+            {
                 return ((OtpErlangBoolean) erl).booleanValue();
             }
-            if (erl instanceof OtpErlangTuple) {
+            if (erl instanceof OtpErlangTuple)
+            {
                 return erlangObjectsToJava(((OtpErlangTuple) erl).elements()).toArray();
             }
-            if (erl instanceof OtpErlangAtom) {
+            if (erl instanceof OtpErlangAtom)
+            {
                 return ((OtpErlangAtom) erl).atomValue();
             }
-            if (erl instanceof OtpErlangList) {
+            if (erl instanceof OtpErlangList)
+            {
                 return erlangObjectsToJava(((OtpErlangList) erl).elements());
             }
-        } catch (final OtpErlangRangeException oere) {
+        }
+        catch (final OtpErlangRangeException oere)
+        {
             throw new IllegalArgumentException("Can't convert Erlang character", oere);
         }
 
         return erl;
     }
 
-    private static List<Object> erlangObjectsToJava(final OtpErlangObject[] erlangObjects) {
+    private static List<Object> erlangObjectsToJava(final OtpErlangObject[] erlangObjects)
+    {
         final List<Object> result = new ArrayList<Object>();
-        for (final OtpErlangObject erlangObject : erlangObjects) {
+        for (final OtpErlangObject erlangObject : erlangObjects)
+        {
             result.add(erlangToJava(erlangObject));
         }
         return result;

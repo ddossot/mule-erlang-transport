@@ -5,6 +5,7 @@
 # Mule Erlang Transport
 
 [![Build Status](https://travis-ci.org/ddossot/mule-erlang-transport.svg)](https://travis-ci.org/ddossot/mule-erlang-transport)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.dossot/mule-transport-erlang/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.dossot/mule-transport-erlang)
 
 A transport that can send and receive messages to and from Erlang nodes.
 
@@ -19,17 +20,25 @@ Erlang R13B01 or better must be installed on the host where you want to use this
 If you have an Erlang application already running on the host where Mule will run, `epmd` will be running already. Otherwise, you'll need to start it by hand.
 For this, use the startup command that is appropriate to your environment (for example, [for Linux](https://web.archive.org/web/20120818125617/http://linux.die.net/man/1/epmd)).
 
-## Build
+## Usage
 
-Run:
+Releases are available on Central.
+Snapshot builds are available in the Sonatype OSS Snapshots repository:
+
+```xml
+<repository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
+
+If you need to build the latest snapshot yourself, run:
 
     mvn clean install
 
-Integration tests:
-
-    mvn -Pit clean verify
-
-Erlang Escripts must be executable on your platorm for the integration tests to run.
 
 ## Maven Support
 
@@ -188,3 +197,5 @@ Allows the invocation of a module:function on a target node, using the current m
         modulefunction="module:function"
         node="nodeName@hostName" />
 ```
+
+**Copyright © 2010-2015 David Dossot - MIT License**

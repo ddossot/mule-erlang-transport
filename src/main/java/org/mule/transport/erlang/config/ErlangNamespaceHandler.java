@@ -1,12 +1,3 @@
-/*
- * $Id: NamespaceHandler.vm 10621 2008-01-30 12:15:16Z dirk.olmes $
- * --------------------------------------------------------------------------------------
- * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
- *
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
- */
 
 package org.mule.transport.erlang.config;
 
@@ -24,16 +15,23 @@ import org.mule.transport.erlang.transformers.ErlangMessageToObject;
 import org.mule.transport.erlang.transformers.ObjectToErlangMessage;
 
 /**
- * Registers a Bean Definition Parser for handling <code><erlang:connector></code>
- * elements and supporting endpoint elements.
+ * Registers a Bean Definition Parser for handling <code><erlang:connector></code> elements and
+ * supporting endpoint elements.
  */
 public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler
 {
+    static final String[][] ERLANG_ATTRIBUTES = new String[][]
+    {
+        new String[]
+        {
+            ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.PROCESS_NAME_ATTRIBUTE
+        }, new String[]
+        {
+            ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.MODULE_FUNCTION_ATTRIBUTE
+        }
+    };
 
-    public static final String[][] ERLANG_ATTRIBUTES = new String[][]{
-        new String[]{ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.PROCESS_NAME_ATTRIBUTE},
-        new String[]{ErlangProperties.NODE_ATTRIBUTE, ErlangProperties.MODULE_FUNCTION_ATTRIBUTE}};
-
+    @Override
     public void init()
     {
         registerErlangTransportEndpoints();
@@ -45,8 +43,7 @@ public class ErlangNamespaceHandler extends AbstractMuleNamespaceHandler
     }
 
     /**
-     * Need to use the most complex constructors as have mutually exclusive address
-     * attributes
+     * Need to use the most complex constructors as have mutually exclusive address attributes
      */
     protected void registerErlangTransportEndpoints()
     {
